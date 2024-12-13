@@ -34,6 +34,7 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 #include "Colormap.cpp"
 
 
+
 struct Face {
     int verticeIndice[3];
     int normalIndice[3];
@@ -72,7 +73,7 @@ private:
     colormap cmap;                              // Objeto de leitura de arquivos .mtl
 
 public:
-    objReader(std::string filename, colormap& cmap) : cmap(cmap) {
+    objReader(std::string filename) : cmap(cmap) {
 
         // Abre o arquivo
         file.open(filename);
@@ -138,8 +139,21 @@ public:
     // Getters
 
     // Método para retornar as coordenadas dos pontos das faces
-    std::vector<std::vector<point>> getFace() {
+    std::vector<std::vector<point>> getFacePoints() {
         return facePoints;
+    }
+
+    /*
+    Retorna uma lista com um struct faces do objeto. Cada face contém:
+        - Índices dos pontos
+        - Índices das normais
+        - Cores (ka, kd, ks, ke)
+        - Brilho (ns)
+        - Índice de refração (ni)
+        - Opacidade (d)
+    */
+    std::vector<Face> getFaces() {
+        return faces;
     }
 
     // Método para retornar a cor do material (Coeficiente de difusão)
@@ -162,9 +176,19 @@ public:
         return curMaterial.ns;
     }
 
-    // Método para retornar o coeficiente de opacidade
+    // Método para retornar o índice de refração
     double getNi() {
         return curMaterial.ni;
+    }
+
+    // Método para retornar o coeficiente de especularidade
+    vetor getKs() {
+        return curMaterial.ks;
+    }
+
+    // Método para retornar o indice de opacidade
+    double getD() {
+        return curMaterial.d;
     }
 
     // Método para retornar as coordenadas dos pontos

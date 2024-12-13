@@ -26,3 +26,11 @@ A avaliação de cada entrega incluirá:
 
 Certifique-se de ter os seguintes pré-requisitos configurados:
 - **Compilador C++** (suporte para C++11 ou superior);
+
+## Como executar
+
+1. Abra o terminal no mesmo diretório do arquivo main.cpp
+2. Digite `g++ main.cpp` 
+3. Execute o arquivo gerado no terminal, chamando `./nome_do_arquivo`
+
+Obs: Ao compilar, é possível adicionar o parâmetero `-O3` que deixa a execução do código mais rápido, ficando `g++ main.cpp -O3`.

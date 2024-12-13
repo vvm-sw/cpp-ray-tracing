@@ -9,8 +9,7 @@ Divirtam-se :)
 
 int main(){
 
-    colormap cmap("inputs/cubo.mtl");
-    objReader obj("inputs/cubo.obj", cmap);
+    objReader obj("inputs/cubo.obj");
 
     obj.print_faces();
    
