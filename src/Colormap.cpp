@@ -1,5 +1,21 @@
+
 #ifndef COLORMAPHEADER
 #define COLORMAPHEADER
+
+/*
+Classe de leitura de arquivos .mtl, que guarda cores e propriedades de materiais.
+
+A saber que:
+    - kd = Difuso (Cor do objeto)
+    - ks = Specular (Reflexivo)
+    - ke = Emissivo 
+    - ka = Ambiente
+    - ns = Brilho
+    - ni = Índice de refração
+    - d = Opacidade
+
+A classe precisa ser instânciada passando o caminho do arquivo .mtl correspondente
+*/
 
 #include <iostream>
 #include <fstream>
@@ -28,14 +44,11 @@ class colormap {
 public:
     map<string, MaterialProperties> mp;
 
+    //Construtor    
     colormap(){};
-
     colormap(string input){
 
         // construtor: lê arquivo cores.mtl e guarda valores RGB associados a cada nome
-
-        // OBS: atualmente está atribuindo valores RGB baseados no campo "Ka" do arquivo mtl
-        // é possível que em entregas futuras, os outros atributos também serão usados
 
         std::ifstream mtlFile(input);
 
@@ -44,6 +57,7 @@ public:
         }
 
         string line, currentMaterial;
+
         while (std::getline(mtlFile, line)) {
             std::istringstream iss(line);
             std::string keyword;
@@ -92,9 +106,9 @@ public:
 
     vetor getColor(string& s){
         if (mp.find(s) != mp.end()) {
-            return mp[s].ka; // Aqui pode-se escolher qual propriedade retornar
+            return mp[s].kd;
         } else {
-            cerr << "cor " << s << " indefinida no arquivo .mtl\n";
+            cerr << "Error: cor " << s << " indefinida no arquivo .mtl\n";
             return vetor(0,0,0);
         }
     }
@@ -103,10 +117,11 @@ public:
         if (mp.find(s) != mp.end()) {
             return mp[s];
         } else {
-            cerr << "cor " << s << " indefinida no arquivo .mtl\n";
+            cerr << "Error: Cor " << s << " indefinida no arquivo .mtl\n";
             return MaterialProperties();
         }
     }
+
 };
 
 #endif
