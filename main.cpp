@@ -13,6 +13,6 @@ int main(){
     objReader obj("inputs/cubo.obj", cmap);
 
     obj.print_faces();
-    
+   
     return 0;
 }

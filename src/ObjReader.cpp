@@ -11,6 +11,11 @@ No arquivo .obj, temos:
     - vt = texturas
     - f = faces
 
+Nessa classe podem ser obtidas as seguintes informações (por meio dos Getters):
+    - Pontos
+    - Normais
+    - Lista de faces com seus respectivos pontos
+    - Informações de cor, brilho, opacidade, etc.
 
 Obs: -  Para fins de abstração, as normais de cada ponto são ignoradas e assumimos apenas uma normal para cada face. 
      -  As texturas também são ignoradas.
@@ -32,7 +37,6 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 struct Face {
     int verticeIndice[3];
     int normalIndice[3];
-    vetor cor;
     vetor ka;
     vetor kd;
     vetor ks;
@@ -46,7 +50,6 @@ struct Face {
             verticeIndice[i] = 0;
             normalIndice[i] = 0;
         }
-        cor = vetor(); // Assumindo que `vetor` tem um construtor padrão
         ka = vetor();
         kd = vetor();
         ks = vetor();
@@ -60,13 +63,13 @@ struct Face {
 class objReader {
 
 private:
-    std::ifstream file;
-    std::vector<point> vertices;
-    std::vector<vetor> normals;
-    std::vector<Face> faces;
-    std::vector<std::vector<point>> facePoints;
-    MaterialProperties curMaterial; // Propriedades do material atual
-    colormap cmap;
+    std::ifstream file;                         // Arquivo .obj
+    std::vector<point> vertices;                // Lista de pontos
+    std::vector<vetor> normals;                 // Lista de normais
+    std::vector<Face> faces;                    // Lista de indices de faces
+    std::vector<std::vector<point>> facePoints; // Lista de pontos das faces
+    MaterialProperties curMaterial;             // Material atual
+    colormap cmap;                              // Objeto de leitura de arquivos .mtl
 
 public:
     objReader(std::string filename, colormap& cmap) : cmap(cmap) {
@@ -106,12 +109,11 @@ public:
                 for (int i = 0; i < 3; ++i) {
                     int _;
                     iss >> face.verticeIndice[i] >> slash >> _ >> slash >> face.normalIndice[i];
-                    face.cor = curMaterial.kd;
                     face.ka = curMaterial.ka;
                     face.kd = curMaterial.kd;
                     face.ks = curMaterial.ks;
                     face.ke = curMaterial.ke;
-                    face.ns = curMaterial.ns/250.0;
+                    face.ns = curMaterial.ns;
                     face.ni = curMaterial.ni;
                     face.d = curMaterial.d;
                     face.verticeIndice[i]--;
