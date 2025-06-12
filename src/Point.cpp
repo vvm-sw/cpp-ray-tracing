@@ -1,5 +1,4 @@
-#ifndef POINTHEADER
-#define POINTHEADER
+#pragma once
 #include <iostream>
 
 /*
@@ -14,22 +13,15 @@ A classe precisa ser instanciada passando as componentes x, y e z
 */
 
 class Point{
-    private:
-        double x;
-        double y;
-        double z;
+private:
+    double x;
+    double y;
+    double z;
+
 public:
-
     //Construtores
-    Point() {}
-    Point(double x, double y, double z)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
-
-    //Implemente os métodos de pontos aqui
+    Point() : x(0), y(0), z(0) {}
+    Point(double x, double y, double z) : x(x), y(y), z(z) {}
 
     //Print do vetor no formato (x, y, z)
     void print(){
@@ -39,7 +31,10 @@ public:
     //Getters
     double getX() const { return x; }
     double getY() const { return y; }
-    double getZ() const { return z; }   
-};
+    double getZ() const { return z; }
 
-#endif
+    // Setters
+    void setX(double newX) { x = newX; }
+    void setY(double newY) { y = newY; }
+    void setZ(double newZ) { z = newZ; }
+};
