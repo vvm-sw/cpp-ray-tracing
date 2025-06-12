@@ -19,7 +19,7 @@ class vetor{
         double x;
         double y;
         double z;
-    
+
     public:
 
     //Construtores
@@ -31,7 +31,15 @@ class vetor{
     }
 
     //Implemente os métodos de vetores aqui
-
+    vetor multByScalar(double c) {
+        vetor resultVetor = vetor(c * this->getX(), c * this->getY(), this->getZ());
+        return resultVetor;
+    }
+    void multByScalarV2(double c) {
+        this->x *= c;
+        this->y *= c;
+        this->z *= c;
+    }
     //Print do vetor no formato <x, y, z>
     void print(){
         std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl;
