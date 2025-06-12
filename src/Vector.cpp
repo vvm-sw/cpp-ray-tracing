@@ -14,7 +14,7 @@ A saber que:
 A classe precisa ser instanciada passando as componentes x, y e z
 */
 
-class vetor{
+class Vector{
     private:
         double x;
         double y;
@@ -23,16 +23,16 @@ class vetor{
     public:
 
     //Construtores
-    vetor() {}
-    vetor(double x, double y, double z){
+    Vector() {}
+    Vector(double x, double y, double z){
         this->x = x;
         this->y = y;
         this->z = z;
     }
 
     //Implemente os métodos de vetores aqui
-    vetor multByScalar(double c) {
-        vetor resultVetor = vetor(c * this->getX(), c * this->getY(), this->getZ());
+    Vector multByScalar(double c) {
+        Vector resultVetor = Vector(c * this->getX(), c * this->getY(), this->getZ());
         return resultVetor;
     }
     void multByScalarV2(double c) {
