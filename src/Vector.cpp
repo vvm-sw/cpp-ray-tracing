@@ -1,7 +1,6 @@
-#ifndef VECTORHEADER
-#define VECTORHEADER
+#pragma once
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 /*
 Classe de vetores.
@@ -15,31 +14,17 @@ A classe precisa ser instanciada passando as componentes x, y e z
 */
 
 class Vector{
-    private:
-        double x;
-        double y;
-        double z;
 
-    public:
+private:
+    double x;
+    double y;
+    double z;
 
+public:
     //Construtores
-    Vector() {}
-    Vector(double x, double y, double z){
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
+    Vector() : x(0), y(0), z(0) {}
+    Vector(double x, double y, double z) : x(x), y(y), z(z) {}
 
-    //Implemente os métodos de vetores aqui
-    Vector multByScalar(double c) {
-        Vector resultVetor = Vector(c * this->getX(), c * this->getY(), this->getZ());
-        return resultVetor;
-    }
-    void multByScalarV2(double c) {
-        this->x *= c;
-        this->y *= c;
-        this->z *= c;
-    }
     //Print do vetor no formato <x, y, z>
     void print(){
         std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl;
@@ -49,6 +34,9 @@ class Vector{
     double getX() const { return x; }
     double getY() const { return y; }
     double getZ() const { return z; }
-};
 
-#endif
+    // Setters
+    void setX(double newX) { x = newX; }
+    void setY(double newY) { y = newY; }
+    void setZ(double newZ) { z = newZ; }
+};
