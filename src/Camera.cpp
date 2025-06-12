@@ -3,10 +3,10 @@
 #include "Point.cpp"
 #include "Vector.cpp"
 
-class camera {
+class Camera {
     private:
-        point location;
-        point pointingAt;
+        Point location;
+        Point pointingAt;
         vetor vetorUp;
         // Vetores U, W e V ortonormais (Ortogonais entre si e de norma/intensidade 1)
 
