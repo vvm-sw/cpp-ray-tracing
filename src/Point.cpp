@@ -13,7 +13,7 @@ A saber que:
 A classe precisa ser instanciada passando as componentes x, y e z
 */
 
-class point{
+class Point{
     private:
         double x;
         double y;
@@ -21,8 +21,8 @@ class point{
 public:
 
     //Construtores
-    point() {}
-    point(double x, double y, double z)
+    Point() {}
+    Point(double x, double y, double z)
     {
         this->x = x;
         this->y = y;
