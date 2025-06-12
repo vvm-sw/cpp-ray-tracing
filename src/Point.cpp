@@ -1,5 +1,6 @@
 #ifndef POINTHEADER
 #define POINTHEADER
+#include <iostream>
 
 /*
 Classe de pontos.
