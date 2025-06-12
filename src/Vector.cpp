@@ -1,5 +1,4 @@
-#pragma once
-#include <iostream>
+#include "Vector.h"
 
 /*
 Classe de vetores.
@@ -12,30 +11,32 @@ A saber que:
 A classe precisa ser instanciada passando as componentes x, y e z
 */
 
-class Vector{
+// Construtores
+Vector::Vector(double x, double y, double z) : x(x), y(y), z(z) {}
 
-private:
-    double x;
-    double y;
-    double z;
+// Print do vetor no formato <x, y, z>
+void Vector::print() {
+    std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl;
+}
 
-public:
-    //Construtores
-    Vector() : x(0), y(0), z(0) {}
-    Vector(double x, double y, double z) : x(x), y(y), z(z) {}
+// Getters
+double Vector::getX() const { return x; }
+double Vector::getY() const { return y; }
+double Vector::getZ() const { return z; }
 
-    //Print do vetor no formato <x, y, z>
-    void print(){
-        std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl;
-    }
+// Setters
+void Vector::setX(double newX) { x = newX; }
+void Vector::setY(double newY) { y = newY; }
+void Vector::setZ(double newZ) { z = newZ; }
 
-    //Getters
-    double getX() const { return x; }
-    double getY() const { return y; }
-    double getZ() const { return z; }
+// Calcula a magnitude (comprimento) do vetor
+double Vector::magnitude() const {
+    return sqrt(x * x + y * y + z * z);
+}
 
-    // Setters
-    void setX(double newX) { x = newX; }
-    void setY(double newY) { y = newY; }
-    void setZ(double newZ) { z = newZ; }
-};
+// Retorna uma versão normalizada (comprimento 1) do vetor
+Vector Vector::normalized() const {
+    double mag = magnitude();
+    if (mag == 0) return Vector(0, 0, 0); // Evita divisão por zero
+    return Vector(x / mag, y / mag, z / mag);
+}

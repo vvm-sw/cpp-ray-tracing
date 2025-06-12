@@ -29,8 +29,8 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 #include <vector>
 #include <string>
 #include <sstream>
-#include "Vector.cpp"
-#include "Point.cpp"
+#include "Vector.h"
+#include "Point.h"
 #include "Colormap.cpp"
 
 
@@ -38,10 +38,10 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 struct Face {
     int verticeIndice[3];
     int normalIndice[3];
-    vetor ka;
-    vetor kd;
-    vetor ks;
-    vetor ke;
+    Vector ka;
+    Vector kd;
+    Vector ks;
+    Vector ke;
     double ns;
     double ni;
     double d;
@@ -51,10 +51,10 @@ struct Face {
             verticeIndice[i] = 0;
             normalIndice[i] = 0;
         }
-        ka = vetor();
-        kd = vetor();
-        ks = vetor();
-        ke = vetor();
+        ka = Vector();
+        kd = Vector();
+        ks = Vector();
+        ke = Vector();
         ns = 0.0;
         ni = 0.0;
         d = 0.0;
@@ -65,10 +65,10 @@ class objReader {
 
 private:
     std::ifstream file;                         // Arquivo .obj
-    std::vector<point> vertices;                // Lista de pontos
-    std::vector<vetor> normals;                 // Lista de normais
+    std::vector<Point> vertices;                // Lista de pontos
+    std::vector<Vector> normals;                 // Lista de normais
     std::vector<Face> faces;                    // Lista de indices de faces
-    std::vector<std::vector<point>> facePoints; // Lista de pontos das faces
+    std::vector<std::vector<Point>> facePoints; // Lista de pontos das faces
     MaterialProperties curMaterial;             // Material atual
     colormap cmap;                              // Objeto de leitura de arquivos .mtl
 
@@ -125,7 +125,7 @@ public:
 
         }
         for (const auto& face : faces) {
-            std::vector<point> points = {
+            std::vector<Point> points = {
                 vertices[face.verticeIndice[0]],
                 vertices[face.verticeIndice[1]],
                 vertices[face.verticeIndice[2]]
@@ -139,7 +139,7 @@ public:
     // Getters
 
     // Método para retornar as coordenadas dos pontos das faces
-    std::vector<std::vector<point>> getFacePoints() {
+    std::vector<std::vector<Point>> getFacePoints() {
         return facePoints;
     }
 
@@ -157,17 +157,17 @@ public:
     }
 
     // Método para retornar a cor do material (Coeficiente de difusão)
-    vetor getKd() {
+    Vector getKd() {
         return curMaterial.kd;
     }
 
     // Método para retornar a cor do ambiente
-    vetor getKa() {
+    Vector getKa() {
         return curMaterial.ka;
     }
 
     // Método para retornar o coeficiente especular (Refletência)
-    vetor getKe() {
+    Vector getKe() {
         return curMaterial.ke;
     }
 
@@ -182,7 +182,7 @@ public:
     }
 
     // Método para retornar o coeficiente de especularidade
-    vetor getKs() {
+    Vector getKs() {
         return curMaterial.ks;
     }
 
@@ -192,7 +192,7 @@ public:
     }
 
     // Método para retornar as coordenadas dos pontos
-    std::vector<point> getVertices() {
+    std::vector<Point> getVertices() {
         return vertices;
     }
 

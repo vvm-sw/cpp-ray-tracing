@@ -1,5 +1,4 @@
-#pragma once
-#include <iostream>
+#include "Point.h"
 
 /*
 Classe de pontos.
@@ -12,29 +11,20 @@ A saber que:
 A classe precisa ser instanciada passando as componentes x, y e z
 */
 
-class Point{
-private:
-    double x;
-    double y;
-    double z;
+// Construtores
+Point::Point(double x, double y, double z) : x(x), y(y), z(z) {}
 
-public:
-    //Construtores
-    Point() : x(0), y(0), z(0) {}
-    Point(double x, double y, double z) : x(x), y(y), z(z) {}
+// Print do vetor no formato (x, y, z)
+void Point::print(){
+    std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
+}
 
-    //Print do vetor no formato (x, y, z)
-    void print(){
-        std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
-    }
+// Getters
+double Point::getX() const { return x; }
+double Point::getY() const { return y; }
+double Point::getZ() const { return z; }
 
-    //Getters
-    double getX() const { return x; }
-    double getY() const { return y; }
-    double getZ() const { return z; }
-
-    // Setters
-    void setX(double newX) { x = newX; }
-    void setY(double newY) { y = newY; }
-    void setZ(double newZ) { z = newZ; }
-};
+// Setters
+void Point::setX(double newX) { x = newX; }
+void Point::setY(double newY) { y = newY; }
+void Point::setZ(double newZ) { z = newZ; }
