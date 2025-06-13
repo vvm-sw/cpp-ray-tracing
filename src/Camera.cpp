@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "Geometry.h"
+#include "Operations.h"
 
 // Construtores
 Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res) :

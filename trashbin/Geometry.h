@@ -19,5 +19,8 @@ Vector operator-(const Vector& v1, const Vector& v2);
 Vector operator*(double scalar, const Vector& v);
 Vector operator*(const Vector& v, double scalar);
 
-// Produto Vetorial
+// Produto Vetorial entre vetores
 Vector cross(const Vector& v1, const Vector& v2);
+
+// Divisão por escalar 
+Vector operator/(const Vector& v, double t);

@@ -1,4 +1,5 @@
 #include "Point.h"
+#include "Vector.h"
 
 /*
 Classe de pontos.

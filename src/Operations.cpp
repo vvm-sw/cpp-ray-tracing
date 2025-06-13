@@ -1,4 +1,4 @@
-#include "Geometry.h"
+#include "Operations.h"
 
 // Adição: Ponto + Vetor = Ponto
 Point operator+(const Point& p, const Vector& v) {
@@ -33,9 +33,20 @@ Vector operator*(const Vector& v, double scalar) {
     return scalar * v; // Reutiliza a função acima
 }
 
+// Produto Vetorial entre vetores
 Vector cross(const Vector& v1, const Vector& v2) {
     double crossX = v1.getY() * v2.getZ() - v1.getZ() * v2.getY();
     double crossY = v1.getZ() * v2.getX() - v1.getX() * v2.getZ();
     double crossZ = v1.getX() * v2.getY() - v1.getY() * v2.getX();
     return Vector(crossX, crossY, crossZ);
+}
+
+// Divisão por escalar 
+Vector operator/(const Vector& v, double t) {
+    return Vector(v.getX() / t, v.getY() / t, v.getZ() / t);
+}
+
+// Produto Escalar: Vetor * Vetor = Escalar
+double dot(const Vector &v1, const Vector &v2) {
+    return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 }

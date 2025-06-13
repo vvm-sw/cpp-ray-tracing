@@ -1,4 +1,5 @@
 #include "Vector.h"
+#include "Point.h"
 
 /*
 Classe de vetores.
@@ -38,5 +39,5 @@ double Vector::magnitude() const {
 Vector Vector::normalized() const {
     double mag = magnitude();
     if (mag == 0) return Vector(0, 0, 0); // Evita divisão por zero
-    return Vector(x / mag, y / mag, z / mag);
+    return Vector(this->getX()/mag, this->getY()/mag, this->getZ()/mag);
 }
