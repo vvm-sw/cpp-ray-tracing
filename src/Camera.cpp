@@ -1,10 +1,16 @@
 #include "Camera.h"
 #include "Operations.h"
+#include <cmath>
 
 // Construtores
 Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res) :
     location(location), pointingAt(pointingAt), worldUp(worldUp), distance(distance), h_res(h_res), v_res(v_res), U(0, 0, 0), V(0, 0, 0), W(0, 0, 0) {
     calculateBasis();
+    aspectRatio = h_res/v_res;
+    double theta = fieldOfView * M_PI / 180; // Para radianos
+    double halfHeight = tan(theta/2);
+    double halfWidth = aspectRatio * halfHeight;
+    setS(location - ((halfWidth * U) - (halfHeight * V) - W), 2*halfWidth, 2*halfHeight);
 }
 
 // Getters
@@ -18,20 +24,27 @@ double Camera::getFOV() const { return fieldOfView; }
 Vector Camera::getU() const { return U; } // Vetor "direita"
 Vector Camera::getV() const { return V; } // Vetor "para cima" real
 Vector Camera::getW() const { return W; } // Vetor "para trás"
+Screen Camera::getScreen() const { return s; }
 
 // Setters
 void Camera::setLocation(const Point& loc) {
-    this->location = loc;
+    location = loc;
     calculateBasis(); // Recalcula a base sempre que a câmera se move
 }
 void Camera::setPointingAt(const Point& point) {
-    this->pointingAt = point;
+    pointingAt = point;
     calculateBasis(); // Recalcula a base sempre que a mira muda
 }
 void Camera::setVectorUp(const Vector& up) { worldUp = up; }
-void Camera::setDistance(double d) { distance = d; }
+void Camera::setDistance(double d) {
+    distance = d;
+    fieldOfView = atan(h_res / distance); // Recalcula o campo de visão sempre que a câmera se distancia da tela
+}
 void Camera::setVRes(unsigned int res) { v_res = res; }
-void Camera::setHRes(unsigned int res) { h_res = res; }
+void Camera::setHRes(unsigned int res) {
+    h_res = res;
+    fieldOfView = atan(h_res / distance); // Recalcula o campo de visão sempre que a tela aumentar de tamanho horizontalmente
+}
 void Camera::setFOV(double fov) { fieldOfView = fov; }
 void Camera::setU(const Vector& newU) { U = newU; } // Vetor "direita"
 void Camera::setV(const Vector& newV) { V = newV; } // Vetor "para cima" real
@@ -49,4 +62,10 @@ void Camera::calculateBasis() {
     // Calcula o vetor V (eixo y da câmera, "para-cima" real)
     // V é o produto vetorial de W e U para garantir a ortogonalidade
     V = cross(W, U); // Não precisa normalizar, pois U e W já são ortonormais
+}
+
+void Camera::setS(const Point& p, double horizontal, double vertical) {
+    s.lower_left_corner = p;
+    s.horizontal = horizontal * U;
+    s.vertical = vertical * V;
 }

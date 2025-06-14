@@ -1,60 +1,47 @@
-#include "src/Ray.h"
+#include "src/Sphere.h"
+#include "src/Hittable.h"
+#include "src/Camera.h"
 #include <iostream>
+#include <vector>
 
-// Retorna uma versão normalizada do vetor v (comprimento 1)
-Vector unit_vector(Vector v) {
-    return v.normalized();
-}
-
-bool hit_sphere(const Point& center, float radius, const Ray& r) {
-    // Esta função resolve a equação quadrática da interseção raio-esfera 
-    Vector oc = r.origin() - center;
-    double a = dot(r.direction(), r.direction());
-    double b = 2.0 * dot(oc, r.direction());
-    double c = dot(oc, oc) - radius * radius;
-    double discriminant = b * b - 4 * a * c; // Calcula o discriminante
-    
-    // Se o discriminante > 0, há interseção 
-    return (discriminant > 0);
-}
+using namespace std;
 
 // Função que define a cor de fundo
-// Ela cria um gradiente azul-branco 
-Vector color(const Ray& r) {
-    // Se o raio atingir nossa esfera (centro em 0,0,-1, raio 0.5), pinte de vermelho
-    if (hit_sphere(Point(0, 0, -1), 0.5, r)) {
-        return Vector(1, 0, 0); // Vermelho
+Vector colour(const vector<Hittable*>& l,  const Ray& r) {
+
+    // Itera na lista para verificar os objetos
+    for (const auto& obj : l) {
+        if (obj->hit(r)) {
+            return Vector(obj->getColor());
+        }
     }
 
-    Vector unit_direction = unit_vector(r.direction());
-    // Mapeia a componente Y do vetor (-1.0 a 1.0) para t (0.0 a 1.0)
-    float t = 0.5 * (unit_direction.getY() + 1.0);
-    // Interpolação linear (lerp) entre branco e azul 
-    // blended_value = (1-t)*start_value + t*end_value
-    return (1.0 - t) * Vector(1.0, 1.0, 1.0) + t * Vector(0.5, 0.7, 1.0);
+    return Vector(0, 0, 0);
 }
 
 int main() {
-    int nx = 200;
-    int ny = 100;
-    std::cout << "P3\n" << nx << " " << ny << "\n255\n";
+    Camera c = Camera(Point(0, 0, 0), Point(0, 0, 1), Vector(0, 1, 0), 5, 400, 200);
+    vector<Hittable*> objList;
 
-    // Setup da câmera virtual 
-    Vector lower_left_corner(-2.0, -1.0, -1.0); // Canto inferior esquerdo da "tela"
-    Vector horizontal(4.0, 0.0, 0.0);           // Largura da "tela"
-    Vector vertical(0.0, 2.0, 0.0);             // Altura da "tela"
-    Point origin(0.0, 0.0, 0.0);               // Posição do "olho" 
+    // Inicio da lista de objetos a serem visto pela câmera
+    objList.push_back(new Sphere(Point(0,0,-30), 1, Vector(1,0,0)));
+    
+    // Fim da lista de objetos a serem visto pela câmera
 
-    for (int j = ny - 1; j >= 0; j--) {
-        for (int i = 0; i < nx; i++) {
-            // Mapeia o pixel (i,j) para as coordenadas (u,v) na tela (0 a 1)
-            double u = double(i) / double(nx);
-            double v = double(j) / double(ny);
+    std::cout << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
+    for (int j = c.getVRes() - 1; j >= 0; j--) { // de cima para baixo
+        for (int i = 0; i < c.getHRes(); i++) { // da esquerda para direita
+            // Normaliza as coordenadas do pixel para (u,v) entre 0.0 e 1.0
+            double u = double(i) / double(c.getHRes());
+            double v = double(j) / double(c.getVRes());
             
-            // Cria um raio que vai da origem para o pixel atual na tela 
-            Ray r(origin, lower_left_corner + u * horizontal + v * vertical);
-            Vector col = color(r);
+            Point target = c.getScreen().lower_left_corner + u * c.getScreen().horizontal + v * c.getScreen().vertical;
+            Ray r = Ray(c.getLocation(), target - c.getLocation());
+            
+            // Calcula a cor para o raio, passando a lista de objetos
+            Vector col = colour(objList, r);
 
+            // Converte a cor para o formato de 0 a 255 e imprime
             int ir = int(255.99 * col.getX());
             int ig = int(255.99 * col.getY());
             int ib = int(255.99 * col.getZ());

@@ -1,7 +1,12 @@
 #pragma once
 #include "Point.h"
 #include "Vector.h"
-#include <vector>
+
+struct Screen {
+    Point lower_left_corner;
+    Vector horizontal;
+    Vector vertical;
+};
 
 class Camera {
 private:
@@ -11,8 +16,10 @@ private:
     double distance;    // Distância d
     unsigned int v_res; // Resolução vertical
     unsigned int h_res; // Resolução horizontal
-    Vector U, V, W;     // Vetores da base da câmera
-    float fieldOfView;
+    Vector U, V, W;     // Vetores da base da câmera. W é para trás. U é para direita. V é para cima.
+    float fieldOfView;  // Angulo do campo de visão da câmera em graus
+    Screen s; // Tela de projeção
+    double aspectRatio;
 
     void calculateBasis();
 
@@ -31,6 +38,7 @@ public:
     Vector getU() const;
     Vector getV() const;
     Vector getW() const;
+    Screen getScreen() const;
 
     // Setters
     void setLocation(const Point& loc);
@@ -43,4 +51,5 @@ public:
     void setU(const Vector& newU);
     void setV(const Vector& newV);
     void setW(const Vector& newW);
+    void setS(const Point& p, double horizontal, double vertical);
 };

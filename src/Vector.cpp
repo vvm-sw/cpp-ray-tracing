@@ -13,6 +13,7 @@ A classe precisa ser instanciada passando as componentes x, y e z
 */
 
 // Construtores
+Vector::Vector() {}
 Vector::Vector(double x, double y, double z) : x(x), y(y), z(z) {}
 
 // Print do vetor no formato <x, y, z>

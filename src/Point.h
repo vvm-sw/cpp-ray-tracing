@@ -20,6 +20,7 @@ private:
 
 public:
     // Construtores
+    Point();
     Point(double x, double y, double z);
 
     // Print do vetor no formato (x, y, z)

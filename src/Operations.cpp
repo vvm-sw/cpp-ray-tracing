@@ -9,6 +9,15 @@ Point operator+(const Vector& v, const Point& p) {
     return p + v; // Reutiliza a função acima
 }
 
+// Subtração: Ponto - Vetor = Vetor
+Point operator-(const Point& p, const Vector& v) {
+    return Point(p.getX() - v.getX(), p.getY() - v.getY(), p.getZ() - v.getZ());
+}
+
+Point operator-(const Vector& v, const Point& p) {
+    return p - v; // Reutiliza a função acima
+}
+
 // Subtração: Ponto - Ponto = Vetor
 Vector operator-(const Point& p1, const Point& p2) {
     return Vector(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ() - p2.getZ());

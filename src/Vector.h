@@ -22,7 +22,7 @@ private:
 
 public:
     // Construtores
-    Vector() {}
+    Vector();
     Vector(double x, double y, double z);
 
     // Print do vetor no formato <x, y, z>
