@@ -16,7 +16,7 @@ public:
     // Getters
     Point getPlanePoint() const;
     Vector getNormal() const;
-    Vector getColor() const;
+    virtual Vector getColor() const override;
     
     // Setters
     void setPlanePoint(Point& planePoint);
