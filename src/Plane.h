@@ -17,6 +17,7 @@ public:
     Point getPlanePoint() const;
     Vector getNormal() const;
     Vector getColor() const;
+    
     // Setters
     void setPlanePoint(Point& planePoint);
     void setNormal(Vector& normal);

@@ -5,26 +5,27 @@
 
 Plane::Plane(Point newPlanePoint, Vector newNormal, Vector newColor) : planePoint(newPlanePoint), normal(newNormal), color(newColor) {}
 
-    // Getters
-    Point getPlanePoint() { return planePoint; }
-    Vector getNormal() { return normal; }
-    Vector GetColor() { return color;}
-    // Setters
-    void setPlanePoint(Point& nPlanePoint) { planePoint = newPlanePoint ;}
-    void setNormal(Vector& newNormal) { normal = newNormal; }
-    void setColor(Vector& newColor) { color = newColor; }
+// Getters
+Point Plane::getPlanePoint() const { return planePoint; }
+Vector Plane::getNormal() const { return normal; }
+Vector Plane::getColor() const { return color; }
 
-    bool hit (const Ray& r) const {
-        // Esta função analisa os vetores N normal e vetor D direção do raio
-        double t = dot(Q - r.origin(), n)/dot(r.direction(), n);
+// Setters
+void Plane::setPlanePoint(Point& newPlanePoint) { planePoint = newPlanePoint ;}
+void Plane::setNormal(Vector& newNormal) { normal = newNormal; }
+void Plane::setColor(Vector& newColor) { color = newColor; }
 
-        Vector qp = Q - r.origin();
-        double qpDotN = dot(qp, n);
-        double dDotN = dot(r.direction(), n);
+bool Plane::hit (const Ray& r) const {
+    // Esta função analisa os vetores N normal e vetor D direção do raio
+    double t = dot(getPlanePoint() - r.origin(), getNormal()) / dot(r.direction(), getNormal());
 
-        return (qpDotN == 0.0 & dDotN == 0.0);
+    Vector qp = getPlanePoint() - r.origin();
+    double qpDotN = dot(qp, getNormal());
+    double dDotN = dot(r.direction(), getNormal());
 
-        //return r.origin()
-        //if (dot(r.direction(), n) == 0) return true;
-        //Vector qp = Q - r.origin();
-    }
+    return (qpDotN == 0.0 & dDotN == 0.0);
+
+    //return r.origin()
+    //if (dot(r.direction(), n) == 0) return true;
+    //Vector qp = Q - r.origin();
+}
