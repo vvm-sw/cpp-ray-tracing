@@ -28,8 +28,8 @@ int main() {
     vector<Hittable*> objList;
 
     // Inicio da lista de objetos a serem visto pela câmera
-    objList.push_back(new Sphere(Point(0,2,0), 1, Vector(1,0,0)));
-    objList.push_back(new Plane(Point(0,-1,0), Vector(0,1,0), Vector(0,1,0)));
+    objList.push_back(new Sphere(Point(0, 2, 0), 1, Vector(255, 0, 0)));
+    objList.push_back(new Plane(Point(0, -1, 0), Vector(0, 1, 0), Vector(0, 255, 0)));
     
     // Fim da lista de objetos a serem visto pela câmera
 
@@ -48,9 +48,9 @@ int main() {
             Vector col = colour(objList, r);
 
             // Converte a cor para o formato de 0 a 255 e imprime
-            int ir = int(255.99 * col.getX());
-            int ig = int(255.99 * col.getY());
-            int ib = int(255.99 * col.getZ());
+            int ir = int(col.getX());
+            int ig = int(col.getY());
+            int ib = int(col.getZ());
             // std::cout << ir << " " << ig << " " << ib << "\n";
             exitRGB << ir << " " << ig << " " << ib << "\n";
         }
