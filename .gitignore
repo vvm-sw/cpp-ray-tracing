@@ -1,4 +1,5 @@
 # Arquivos de editor/IDE
+trashbin/
 .idea/
 .vscode/
 *.code-workspace

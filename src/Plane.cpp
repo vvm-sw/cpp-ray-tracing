@@ -17,9 +17,12 @@ void Plane::setColor(Vector& newColor) { color = newColor; }
 
 bool Plane::hit (const Ray& r) const {
     // Esta função analisa os vetores N normal e vetor D direção do raio
+    // P -> Origem do raio
+    // Q -> Ponto no plano
     // ((P - t * D) - Q) * N = 0
     // t = ((Q-P) * n)/(n * d)
     double t = dot(getPlanePoint() - r.origin(), getNormal()) / dot(r.direction(), getNormal());
+    // ! dot(r.direction(), getNormal()); pode dar 0 !
 
    /* Vector qp = r.origin() - getPlanePoint() ;
     double qpDotN = dot(qp, getNormal());

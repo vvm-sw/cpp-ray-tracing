@@ -17,7 +17,8 @@ private:
     unsigned int v_res; // Resolução vertical
     unsigned int h_res; // Resolução horizontal
     Vector U, V, W;     // Vetores da base da câmera. W é para trás. U é para direita. V é para cima.
-    float fieldOfView;  // Angulo do campo de visão da câmera em graus
+    double fieldOfView;  // Angulo do campo de visão da câmera em graus
+    // ! VERIFICAR FIELD OF VIEW
     Screen s; // Tela de projeção
     double aspectRatio;
 
@@ -25,7 +26,7 @@ private:
 
 public:
     // Construtores
-    Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res);
+    Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res, double fieldOfView);
 
     // Getters
     Point getLocation() const;
@@ -51,5 +52,5 @@ public:
     void setU(const Vector& newU);
     void setV(const Vector& newV);
     void setW(const Vector& newW);
-    void setS(const Point& p, double horizontal, double vertical);
+    void setS(const Point& p, Vector horizontal, Vector vertical);
 };

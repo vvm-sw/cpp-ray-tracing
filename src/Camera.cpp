@@ -3,14 +3,15 @@
 #include <cmath>
 
 // Construtores
-Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res) :
-    location(location), pointingAt(pointingAt), worldUp(worldUp), distance(distance), h_res(h_res), v_res(v_res), U(0, 0, 0), V(0, 0, 0), W(0, 0, 0) {
+Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res, double fieldOfView) :
+    location(location), pointingAt(pointingAt), worldUp(worldUp), distance(distance), h_res(h_res), v_res(v_res), fieldOfView(fieldOfView), U(0, 0, 0), V(0, 0, 0), W(0, 0, 0) {
     calculateBasis();
     aspectRatio = h_res/v_res;
     double theta = fieldOfView * M_PI / 180; // Para radianos
     double halfHeight = tan(theta/2);
     double halfWidth = aspectRatio * halfHeight;
-    setS(location - ((halfWidth * U) - (halfHeight * V) - W), 2*halfWidth, 2*halfHeight);
+    Point corner = location - (distance * W) - (halfWidth * U) - (halfHeight * V);
+    setS(corner, 2*halfWidth*U, 2*halfHeight*V);
 }
 
 // Getters
@@ -38,12 +39,10 @@ void Camera::setPointingAt(const Point& point) {
 void Camera::setVectorUp(const Vector& up) { worldUp = up; }
 void Camera::setDistance(double d) {
     distance = d;
-    fieldOfView = atan(h_res / distance); // Recalcula o campo de visão sempre que a câmera se distancia da tela
 }
 void Camera::setVRes(unsigned int res) { v_res = res; }
 void Camera::setHRes(unsigned int res) {
     h_res = res;
-    fieldOfView = atan(h_res / distance); // Recalcula o campo de visão sempre que a tela aumentar de tamanho horizontalmente
 }
 void Camera::setFOV(double fov) { fieldOfView = fov; }
 void Camera::setU(const Vector& newU) { U = newU; } // Vetor "direita"
@@ -64,8 +63,8 @@ void Camera::calculateBasis() {
     V = cross(W, U); // Não precisa normalizar, pois U e W já são ortonormais
 }
 
-void Camera::setS(const Point& p, double horizontal, double vertical) {
+void Camera::setS(const Point& p, Vector horizontal, Vector vertical) {
     s.lower_left_corner = p;
-    s.horizontal = horizontal * U;
-    s.vertical = vertical * V;
+    s.horizontal = horizontal;
+    s.vertical = vertical;
 }

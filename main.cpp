@@ -1,8 +1,10 @@
 #include "src/Sphere.h"
+#include "src/Plane.h"
 #include "src/Hittable.h"
 #include "src/Camera.h"
 #include <iostream>
 #include <vector>
+#include <fstream> // Biblioteca para "File Stream" (fluxo de arquivos)
 
 using namespace std;
 
@@ -16,26 +18,30 @@ Vector colour(const vector<Hittable*>& l,  const Ray& r) {
         }
     }
 
-    return Vector(0, 0, 0);
+    return Vector(238,238,228);
 }
 
 int main() {
-    Camera c = Camera(Point(0, 0, 0), Point(0, 0, 1), Vector(0, 1, 0), 5, 400, 200);
+    ofstream exitRGB("imagem.ppm");
+
+    Camera c = Camera(Point(0, 0, 0), Point(1, 0, 0), Vector(0, 1, 0), 1, 400, 200, 90);
     vector<Hittable*> objList;
 
     // Inicio da lista de objetos a serem visto pela câmera
-    objList.push_back(new Sphere(Point(0,0,-30), 1, Vector(1,0,0)));
+    objList.push_back(new Sphere(Point(0,2,0), 1, Vector(1,0,0)));
+    objList.push_back(new Plane(Point(0,-1,0), Vector(0,1,0), Vector(0,1,0)));
     
     // Fim da lista de objetos a serem visto pela câmera
 
-    std::cout << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
+    // std::cout << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
+    exitRGB << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
     for (int j = c.getVRes() - 1; j >= 0; j--) { // de cima para baixo
         for (int i = 0; i < c.getHRes(); i++) { // da esquerda para direita
             // Normaliza as coordenadas do pixel para (u,v) entre 0.0 e 1.0
             double u = double(i) / double(c.getHRes());
             double v = double(j) / double(c.getVRes());
             
-            Point target = c.getScreen().lower_left_corner + u * c.getScreen().horizontal + v * c.getScreen().vertical;
+            Point target = c.getScreen().lower_left_corner + (u * c.getScreen().horizontal) + (v * c.getScreen().vertical);
             Ray r = Ray(c.getLocation(), target - c.getLocation());
             
             // Calcula a cor para o raio, passando a lista de objetos
@@ -45,7 +51,9 @@ int main() {
             int ir = int(255.99 * col.getX());
             int ig = int(255.99 * col.getY());
             int ib = int(255.99 * col.getZ());
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            // std::cout << ir << " " << ig << " " << ib << "\n";
+            exitRGB << ir << " " << ig << " " << ib << "\n";
         }
     }
+    return 0;
 }
