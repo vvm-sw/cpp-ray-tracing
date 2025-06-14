@@ -39,14 +39,14 @@ void Camera::setW(const Vector& newW) { W = newW; } // Vetor "para trás"
 
 // O coração da lógica da câmera
 void Camera::calculateBasis() {
-    // 1. Calcula o vetor W (oposto à direção da mira), conforme a especificação
+    // Calcula o vetor W (oposto à direção da mira), conforme a especificação
     W = (location - pointingAt).normalized();
 
-    // 2. Calcula o vetor U (eixo x da câmera, "direita")
-    //    U é o produto vetorial do "para-cima" do mundo com W
+    // Calcula o vetor U (eixo x da câmera, "direita")
+    // U é o produto vetorial do "para-cima" do mundo com W
     U = cross(worldUp, W).normalized();
 
-    // 3. Calcula o vetor V (eixo y da câmera, "para-cima" real)
-    //    V é o produto vetorial de W e U para garantir a ortogonalidade
+    // Calcula o vetor V (eixo y da câmera, "para-cima" real)
+    // V é o produto vetorial de W e U para garantir a ortogonalidade
     V = cross(W, U); // Não precisa normalizar, pois U e W já são ortonormais
 }

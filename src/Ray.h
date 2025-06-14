@@ -13,5 +13,5 @@ public:
 
     // Calcula o ponto ao longo do raio para um parâmetro t
     // A equação é p(t) = A + t * B
-    Point point_at_parameter(double t) const { return A + (t * B); }
+    Point point_at(double t) const { return A + (t * B); }
 };

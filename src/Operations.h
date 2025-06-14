@@ -1,6 +1,7 @@
 #pragma once
 #include "Point.h"
 #include "Vector.h"
+#include "Sphere.h"
 
 // Adição: Ponto + Vetor = Ponto
 Point operator+(const Point& p, const Vector& v);
@@ -28,3 +29,6 @@ Vector operator/(const Vector& v, double t);
 
 // Produto Escalar: Vetor * Vetor = Escalar
 double dot(const Vector &v1, const Vector &v2);
+
+// Interseção de um vetor com a esfera
+bool hitSphere(const Sphere& s, Ray& r);
