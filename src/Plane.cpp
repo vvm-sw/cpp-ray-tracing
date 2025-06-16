@@ -21,18 +21,15 @@ bool Plane::hit (const Ray& r) const {
     // Q -> Ponto no plano
     // ((P - t * D) - Q) * N = 0
     // t = ((Q-P) * n)/(n * d)
-    double t = dot(getPlanePoint() - r.origin(), getNormal()) / dot(r.direction(), getNormal());
+
+    
     // ! dot(r.direction(), getNormal()); pode dar 0 !
-
-   /* Vector qp = r.origin() - getPlanePoint() ;
+    double dDotN = dot(r.direction(), getNormal());
+    Vector qp = r.origin() - getPlanePoint();
     double qpDotN = dot(qp, getNormal());
-    double dDotN = dot(r.direction(), getNormal());*/
-
-    return t >= 0;
-
-    //return (qpDotN == 0.0 && dDotN == 0.0);
-
-    //return r.origin()
-    //if (dot(r.direction(), n) == 0) return true;
-    //Vector qp = Q - r.origin();
+    if (dDotN == 0) {
+        return (qpDotN == 0);
+    };
+    
+    return (qpDotN / dDotN) >= 0;
 }
