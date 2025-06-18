@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include <cmath>
 
 /*
 Classe de vetores.

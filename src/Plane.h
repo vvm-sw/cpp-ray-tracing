@@ -1,5 +1,4 @@
 #include "Point.h"
-#include "Operations.h"
 #include "Vector.h"
 #include "Hittable.h"
 
@@ -24,7 +23,7 @@ public:
     void setColor(Vector& color);
 
     // Hit
-    virtual bool hit(const Ray& ray) const override;
+    virtual std::vector<Point> hit(const Ray& ray) const override;
 };
 
 

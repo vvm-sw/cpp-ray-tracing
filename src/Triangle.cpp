@@ -1,4 +1,5 @@
 #include "Triangle.h"
+#include <iostream>
 
 // Construtores
 Triangle::Triangle(Point x, Point y, Point z) : x(x), y(y), z(z) {}

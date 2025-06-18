@@ -1,4 +1,6 @@
 #include "Sphere.h"
+#include <iostream>
+#include <cmath>
 
 // Construtores
 Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
@@ -20,7 +22,7 @@ void Sphere::setRadius(double newRadius) { radius = newRadius; }
 void Sphere::setColor(Vector newColor) { colour = newColor; }
 
 // Interseção de um vetor com a esfera
-bool Sphere::hit(const Ray& r) const {
+std::vector<Point> Sphere::hit(const Ray& r) const {
     // // Equação da esfera: (x-c1)² + (y-c2)² + (z-c3)² = r²,
     // Equação da esfera: |P - C|² = r²,
     // onde P é u ponto da superfície da esfera, C é o seu centro e r é o seu raio
@@ -36,8 +38,18 @@ bool Sphere::hit(const Ray& r) const {
     double a = dot(r.direction(), r.direction());
     double b = 2.0 * dot(r.direction(), oc);
     double c = dot(oc, oc) - (getRadius() * getRadius());
-    double discriminant = b * b - 4 * a * c;
-    
     // Se o discriminante > 0, há interseção 
-    return (discriminant > 0);
+    double discriminant = b * b - 4 * a * c;
+    // t1 e t2 são os valores de t que satisfazem a(s) interseção(ões)
+    double t1;
+    try {
+        t1 = sqrt(discriminant);
+    } catch(const std::exception& e) {
+        return {};
+    }
+    double t2 = t1;
+    t1 = (-b + t1) / (2 * a);
+    t2 = (-b - t2) / (2 * a);
+    
+    return {r.origin() + (t1 * r.direction()), r.origin() + (t2 * r.direction())};
 }

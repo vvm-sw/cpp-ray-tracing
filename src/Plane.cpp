@@ -15,7 +15,7 @@ void Plane::setPlanePoint(Point& newPlanePoint) { planePoint = newPlanePoint ;}
 void Plane::setNormal(Vector& newNormal) { normal = newNormal; }
 void Plane::setColor(Vector& newColor) { color = newColor; }
 
-bool Plane::hit (const Ray& r) const {
+std::vector<Point> Plane::hit (const Ray& r) const {
     // Esta função analisa os vetores N normal e vetor D direção do raio
     // P -> Origem do raio
     // Q -> Ponto no plano

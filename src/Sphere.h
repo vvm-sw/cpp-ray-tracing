@@ -27,5 +27,5 @@ public:
     void setColor(Vector newColor);
 
     // Interseção de um vetor com a esfera
-    virtual bool hit(const Ray& r) const override;
+    virtual std::vector<Point> hit(const Ray& r) const override;
 };
