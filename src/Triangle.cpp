@@ -1,6 +1,7 @@
 #include "Triangle.h"
 #include "Plane.h"
 #include <iostream>
+#include <vector>
 
 // Construtores
 Triangle::Triangle(Point x, Point y, Point z, Vector colour) : x(x), y(y), z(z), colour(colour) {
@@ -31,7 +32,13 @@ void Triangle::setColour(Vector newColour) { colour = newColour; }
 void Triangle::setNormal(Vector newNormal) { normal = newNormal; }
 
 // Interseção de um vetor com o triangulo
-std::vector<Point> Triangle::hit(const Ray& r) const {
+HitRecord Triangle::hit(const Ray& r) const {
     Plane p = Plane(getX(), getNormal(), getColour());
+    std::vector<Point> l = p.hit(r);
+    if (l.size() <= 0) { return {}; }
 
+    std::vector<double> values;
+    for (const auto& point : l) {
+        values = point.isMadeBy(getX(), getY(), getZ(), ;)
+    }
 }

@@ -23,7 +23,7 @@ public:
     void setColor(Vector& color);
 
     // Hit
-    std::vector<Point> hit(const Ray& ray) const override;
+    HitRecord hit(const Ray& ray) const override;
 };
 
 

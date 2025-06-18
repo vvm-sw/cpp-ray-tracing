@@ -1,6 +1,7 @@
 #include "Sphere.h"
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 // Construtores
 Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
@@ -22,7 +23,7 @@ void Sphere::setRadius(double newRadius) { radius = newRadius; }
 void Sphere::setColor(Vector newColor) { colour = newColor; }
 
 // Interseção de um vetor com a esfera
-std::vector<Point> Sphere::hit(const Ray& r) const {
+HitRecord Sphere::hit(const Ray& r) const {
     // // Equação da esfera: (x-c1)² + (y-c2)² + (z-c3)² = r²,
     // Equação da esfera: |P - C|² = r²,
     // onde P é u ponto da superfície da esfera, C é o seu centro e r é o seu raio
@@ -38,18 +39,30 @@ std::vector<Point> Sphere::hit(const Ray& r) const {
     double a = dot(r.direction(), r.direction());
     double b = 2.0 * dot(r.direction(), oc);
     double c = dot(oc, oc) - (getRadius() * getRadius());
-    // Se o discriminante > 0, há interseção 
+
     double discriminant = b * b - 4 * a * c;
+    // Se o discriminante for < 0 então não temos raízes reais, ou seja não há interseção
+    if (discriminant < 0) { return {}; }
+    
+    // Lista de pontos que intersectam o objeto
+    std::vector<Point> pointHitList;
     // t1 e t2 são os valores de t que satisfazem a(s) interseção(ões)
     double t1;
-    try {
-        t1 = sqrt(discriminant);
-    } catch(const std::exception& e) {
-        return {};
+    // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
+    if (discriminant == 0) {
+        t1 = (-b) / (2 * a);
+        pointHitList.push_back(r.origin() + (t1 * r.direction()));
+        return pointHitList;
     }
-    double t2 = t1;
+    
+    // Se o discriminante for > 0 então temos duas raízes, ou seja há interseção
+    double root = sqrt(discriminant);
+    double t2 = t1 = root;
     t1 = (-b + t1) / (2 * a);
     t2 = (-b - t2) / (2 * a);
+
+    if (t1 > 0) { pointHitList.push_back(r.origin() + (t1 * r.direction())); }
+    if (t2 > 0) { pointHitList.push_back(r.origin() + (t2 * r.direction())); }
     
-    return {r.origin() + (t1 * r.direction()), r.origin() + (t2 * r.direction())};
+    return pointHitList;
 }

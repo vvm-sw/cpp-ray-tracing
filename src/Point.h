@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 /*
 Classe de pontos.
@@ -34,4 +35,7 @@ public:
     void setX(double newX);
     void setY(double newY);
     void setZ(double newZ);
+
+    // ! Retorna os valores de i, j e k, onde P = x . 
+    std::vector<double> isMadeBy(Vector a, Vector b, Vector c, double t);
 };

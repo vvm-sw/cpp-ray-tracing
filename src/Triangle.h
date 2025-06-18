@@ -33,5 +33,5 @@ public:
     void setNormal(Vector newNormal);
 
     // Interseção de um vetor com o triangulo
-    std::vector<Point> hit(const Ray& r) const override;
+    HitRecord hit(const Ray& r) const override;
 };
