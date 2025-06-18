@@ -8,7 +8,7 @@ Plane::Plane(Point newPlanePoint, Vector newNormal, Vector newColor) : planePoin
 // Getters
 Point Plane::getPlanePoint() const { return planePoint; }
 Vector Plane::getNormal() const { return normal; }
-Vector Plane::getColor() const { return color; }
+Vector Plane::getColour() const { return color; }
 
 // Setters
 void Plane::setPlanePoint(Point& newPlanePoint) { planePoint = newPlanePoint ;}

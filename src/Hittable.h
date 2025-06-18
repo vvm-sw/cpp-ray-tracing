@@ -16,7 +16,7 @@ public:
     // a classe Hittable é abstrata e não pode ser instanciada.
     // Classes filhas SÃO OBRIGADAS a implementar esta função.
     virtual std::vector<Point> hit(const Ray& r) const = 0;
-    virtual Vector getColor() const = 0;
+    virtual Vector getColour() const = 0;
     
     // Destrutor virtual é importante para classes base polimórficas
     virtual ~Hittable() = default;

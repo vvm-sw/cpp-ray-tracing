@@ -19,7 +19,7 @@ public:
     // Getters
     Point getCenter() const;
     double getRadius() const;
-    virtual Vector getColor() const override;
+    Vector getColour() const override;
 
     // Setters
     void setCenter(Point newCenter);
@@ -27,5 +27,5 @@ public:
     void setColor(Vector newColor);
 
     // Interseção de um vetor com a esfera
-    virtual std::vector<Point> hit(const Ray& r) const override;
+    std::vector<Point> hit(const Ray& r) const override;
 };

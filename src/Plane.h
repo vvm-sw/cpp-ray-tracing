@@ -15,7 +15,7 @@ public:
     // Getters
     Point getPlanePoint() const;
     Vector getNormal() const;
-    virtual Vector getColor() const override;
+    Vector getColour() const override;
     
     // Setters
     void setPlanePoint(Point& planePoint);
@@ -23,7 +23,7 @@ public:
     void setColor(Vector& color);
 
     // Hit
-    virtual std::vector<Point> hit(const Ray& ray) const override;
+    std::vector<Point> hit(const Ray& ray) const override;
 };
 
 

@@ -14,7 +14,7 @@ void Sphere::print() {
 // Getters
 Point Sphere::getCenter() const { return center; }
 double Sphere::getRadius() const { return radius; }
-Vector Sphere::getColor() const { return colour; }
+Vector Sphere::getColour() const { return colour; }
 
 // Setters
 void Sphere::setCenter(Point newCenter) { center = newCenter; }
