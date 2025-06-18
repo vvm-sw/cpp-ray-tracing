@@ -1,7 +1,7 @@
 #include "Sphere.h"
 
 // Construtores
-// Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
+Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
 
 // Print do vetor no formato (center, radius, <x, y, z>)
 void Sphere::print() {

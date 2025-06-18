@@ -11,7 +11,7 @@ private:
 
 public:
     // Construtores
-    Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
+    Sphere(Point center, double radius, Vector colour);
 
     // Print do vetor no formato (center, radius, <x, y, z>)
     void print();
