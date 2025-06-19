@@ -1,4 +1,6 @@
 #pragma once
+#include "Point.h"
+#include "Vector.h"
 #include "Operations.h"
 
 class Ray {

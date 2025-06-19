@@ -27,9 +27,9 @@ public:
     void print();
 
     // Getters
-    double getX() const;
-    double getY() const;
-    double getZ() const;
+    const double& getX() const;
+    const double& getY() const;
+    const double&  getZ() const;
 
     // Setters
     void setX(double newX);
@@ -37,8 +37,8 @@ public:
     void setZ(double newZ);
 
     // Calcula a magnitude (comprimento) do vetor
-    double magnitude() const;
+    const double magnitude() const;
 
     // Retorna uma versão normalizada (comprimento 1) do vetor
-    Vector normalized() const;
+    const Vector normalized() const;
 };

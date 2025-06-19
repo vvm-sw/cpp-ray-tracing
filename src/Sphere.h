@@ -1,7 +1,10 @@
 #pragma once
+#include "Hittable.h"
 #include "Point.h"
 #include "Vector.h"
-#include "Hittable.h"
+
+class Point;
+class Vector;
 
 class Sphere : public Hittable {
 private:
@@ -17,9 +20,9 @@ public:
     void print();
 
     // Getters
-    Point getCenter() const;
-    double getRadius() const;
-    Vector getColour() const override;
+    const Point& getCenter() const;
+    const double& getRadius() const;
+    const Vector& getColour() const override;
 
     // Setters
     void setCenter(Point newCenter);

@@ -1,9 +1,13 @@
+#include "src/Hittable.h"
+#include "src/Ray.h"
+#include "src/Operations.h"
 #include "src/Sphere.h"
 #include "src/Plane.h"
-#include "src/Hittable.h"
+#include "src/Triangle.h"
 #include "src/Camera.h"
 #include <iostream>
 #include <vector>
+#include <limits>
 #include <fstream> // Biblioteca para "File Stream" (fluxo de arquivos)
 
 using namespace std;
@@ -11,14 +15,25 @@ using namespace std;
 // Função que define a cor de fundo
 Vector colour(const vector<Hittable*>& l,  const Ray& r) {
 
+    HitRecord closest = HitRecord{
+        std::numeric_limits<double>::max(), 
+        {0, 0, 0}, {0, 0, 0}, 
+        {red(238), green(238), blue(228)}
+    };
+    double distance;
+    HitRecord rec;
+
     // Itera na lista para verificar os objetos
     for (const auto& obj : l) {
-        if (obj->hit(r)) {
-            return Vector(obj->getColor());
+        rec = obj->hit(r);
+        if (rec.t != 0) {
+            if (rec.t < closest.t) {
+                closest = rec;
+            }
         }
     }
 
-    return Vector(238,238,228);
+    return closest.material_color;
 }
 
 int main() {
@@ -28,8 +43,14 @@ int main() {
     vector<Hittable*> objList;
 
     // Inicio da lista de objetos a serem visto pela câmera
-    objList.push_back(new Sphere(Point(0, 2, 0), 1, Vector(255, 0, 0)));
-    objList.push_back(new Plane(Point(0, -1, 0), Vector(0, 1, 0), Vector(0, 255, 0)));
+    objList.push_back(new Plane(Point(0, -3, 0), Vector(0.5, 1, 0), Vector(0, green(255), 0)));
+    objList.push_back(new Plane(Point(0, -6, 0), Vector(0.25, 1, 0), Vector(0, green(255), blue(255))));
+    objList.push_back(new Plane(Point(0, -12, 0), Vector(0, 1, 0), Vector(red(100), green(100), blue(100))));
+    objList.push_back(new Sphere(Point(4, 0, 0), 1, Vector(red(255), 0, 0)));
+    objList.push_back(new Triangle(Point(3, 0, 0), Point(3, 2, 1), Point(3, 2, 4), Vector(0, 0, blue(255))));
+    objList.push_back(new Sphere(Point(2, 1, 1.3), 0.1, Vector(red(255), 0, 0)));
+    objList.push_back(new Triangle(Point(3, 0, 0), Point(3, -2, -1), Point(3, -2, -4), Vector(0, 0, blue(255))));
+    objList.push_back(new Sphere(Point(2, -1, -1.3), 0.1, Vector(red(255), 0, 0)));
     
     // Fim da lista de objetos a serem visto pela câmera
 
@@ -48,9 +69,9 @@ int main() {
             Vector col = colour(objList, r);
 
             // Converte a cor para o formato de 0 a 255 e imprime
-            int ir = int(col.getX());
-            int ig = int(col.getY());
-            int ib = int(col.getZ());
+            int ir = int(255 * col.getX());
+            int ig = int(255 * col.getY());
+            int ib = int(255 * col.getZ());
             // std::cout << ir << " " << ig << " " << ib << "\n";
             exitRGB << ir << " " << ig << " " << ib << "\n";
         }

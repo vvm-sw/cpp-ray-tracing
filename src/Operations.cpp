@@ -59,3 +59,55 @@ Vector operator/(const Vector& v, double t) {
 double dot(const Vector &v1, const Vector &v2) {
     return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 }
+
+// Comparação entre dois pontos
+bool operator==(const Point& a, const Point& b) {
+    if (a.getX() != b.getX()) { return false; }
+    if (a.getY() != b.getY()) { return false; }
+    if (a.getZ() != b.getZ()) { return false; }
+    return true;
+}
+
+bool operator!=(const Point& a, const Point& b) {
+    return !(a == b);
+}
+
+// Comparação entre dois vetores
+bool operator==(const Vector& a, const Vector& b) {
+    if (a.getX() != b.getX()) { return false; }
+    if (a.getY() != b.getY()) { return false; }
+    if (a.getZ() != b.getZ()) { return false; }
+    return true;
+}
+
+bool operator!=(const Vector& a, const Vector& b) {
+    return !(a == b);
+}
+
+// Comparação entre dois HitRecord
+bool operator==(const HitRecord& a, const HitRecord& b) {
+    if (a.t != b.t) { return false; }
+    if (a.material_color != b.material_color) { return false; }
+    if (a.normal != b.normal) { return false; }
+    if (a.hit_point != b.hit_point) { return false; }
+    return true;
+}
+
+bool operator!=(const HitRecord& a, const HitRecord& b) {
+    return !(a == b);
+}
+
+// Retorna o valor do vermelho normalizado (entre 0 e 1)
+double red(const double& a) {
+    return a/255;
+}
+
+// Retorna o valor do verde normalizado (entre 0 e 1)
+double green(const double& a) {
+    return a/255;
+}
+
+// Retorna o valor do azul normalizado (entre 0 e 1)
+double blue(const double& a) {
+    return a/255;
+}

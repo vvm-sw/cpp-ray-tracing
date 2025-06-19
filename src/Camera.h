@@ -10,17 +10,16 @@ struct Screen {
 
 class Camera {
 private:
-    Point location;   // Ponto C
-    Point pointingAt; // Ponto M
-    Vector worldUp;    // Vetor V_up (temporário)
-    double distance;    // Distância d
-    unsigned int v_res; // Resolução vertical
-    unsigned int h_res; // Resolução horizontal
-    Vector U, V, W;     // Vetores da base da câmera. W é para trás. U é para direita. V é para cima.
+    Point location;      // Ponto C
+    Point pointingAt;    // Ponto M
+    Vector worldUp;      // Vetor V_up (temporário)
+    double distance;     // Distância d
+    unsigned int v_res;  // Resolução vertical
+    unsigned int h_res;  // Resolução horizontal
+    Vector U, V, W;      // Vetores da base da câmera. W é para trás. U é para direita. V é para cima.
     double fieldOfView;  // Angulo do campo de visão da câmera em graus
-    // ! VERIFICAR FIELD OF VIEW
-    Screen s; // Tela de projeção
-    double aspectRatio;
+    Screen s;            // Tela de projeção
+    double aspectRatio;  // Proporção da tela
 
     void calculateBasis();
 

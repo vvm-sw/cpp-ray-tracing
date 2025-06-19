@@ -27,15 +27,12 @@ public:
     void print();
 
     // Getters
-    double getX() const;
-    double getY() const;
-    double getZ() const;
+    const double& getX() const;
+    const double& getY() const;
+    const double& getZ() const;
 
     // Setters
     void setX(double newX);
     void setY(double newY);
     void setZ(double newZ);
-
-    // ! Retorna os valores de i, j e k, onde P = x . 
-    std::vector<double> isMadeBy(Vector a, Vector b, Vector c, double t);
 };

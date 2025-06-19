@@ -1,14 +1,13 @@
 #include "Plane.h"
-#include "Point.h"
-#include "Vector.h"
 #include "Operations.h"
+#include "Ray.h"
 
 Plane::Plane(Point newPlanePoint, Vector newNormal, Vector newColor) : planePoint(newPlanePoint), normal(newNormal), color(newColor) {}
 
 // Getters
-Point Plane::getPlanePoint() const { return planePoint; }
-Vector Plane::getNormal() const { return normal; }
-Vector Plane::getColour() const { return color; }
+const Point& Plane::getPlanePoint() const { return planePoint; }
+const Vector& Plane::getNormal() const { return normal; }
+const Vector& Plane::getColour() const { return color; }
 
 // Setters
 void Plane::setPlanePoint(Point& newPlanePoint) { planePoint = newPlanePoint ;}
@@ -34,9 +33,47 @@ HitRecord Plane::hit (const Ray& r) const {
     // Se qpDotN == 0, então qp é paralelo ao plano e intersecta (infinitas vezes) todo o plano pois o raio está no próprio plano
     // Se qpDotN != 0, então o raio intersecta o plano
     double qpDotN = dot(qp, getNormal());
+    HitRecord rec;
+    double t;
     if (dDotN == 0) {
-        return (qpDotN == 0);
+        if (qpDotN == 0) {
+            // Raio está no plano
+            rec.t = 0,000001;
+            rec.hit_point = r.origin() + (rec.t * r.direction());
+            rec.material_color = getColour();
+            rec.normal = getNormal();
+        } else {
+            // Raio não intersecta o plano
+            rec = HitRecord{};
+        }
+    } else {
+        // Raio intersecta o plano mas temos que verificar o t
+        // Equação vetorial do plano: n . (p - pp) = 0, onde
+        // n é a normal, p é o ponto que queremos verificar e
+        // pp é um ponto do plano
+        // Equação da reta: p(t) = pr + vt, onde
+        // p(t) é o ponto que queremos descobrir, pr é um ponto da reta,
+        // v é o vetor diretor da reta e t é uma escalar
+        // 
+        // Se substituirmos p por p(t) temos que
+        // n . (pr + tv - pp) = 0
+        // E fazendo várias manipulações chegamos em:
+        // t = (-dot(pr, n) + dot(pp, n)) / dot(v, n)
+
+        // Como nossa operação dot não reconhece dot de ponto com vetor, temos que 
+        // subtrair do ponto que queremos com o ponto (0, 0, 0) para obter os mesmos valores
+        // agora como o tipo ponto que a operação dot reconhece
+        t = (-dot(r.origin()-Point(0, 0, 0), getNormal()) + dot(getPlanePoint()-Point(0, 0, 0), getNormal())) / dDotN;
+
+        if (t <= 0) {
+            rec = HitRecord{};
+        } else {
+            rec.t = t;
+            rec.hit_point = r.origin() + (rec.t * r.direction());
+            rec.material_color = getColour();
+            rec.normal = getNormal();
+        }
     }
     
-    return (qpDotN / dDotN) >= 0;
+    return rec;
 }

@@ -1,6 +1,8 @@
 #pragma once
-#include "Ray.h"
-#include <vector>
+#include "Point.h"
+#include "Vector.h"
+
+class Ray;
 
 struct HitRecord {
     double t; // Ele nos diz a que distância ao longo do raio a colisão ocorreu. O t menor é sempre a colisão mais próxima.
@@ -16,7 +18,7 @@ public:
     // a classe Hittable é abstrata e não pode ser instanciada.
     // Classes filhas SÃO OBRIGADAS a implementar esta função.
     virtual HitRecord hit(const Ray& r) const = 0;
-    virtual Vector getColour() const = 0;
+    virtual const Vector& getColour() const = 0;
     
     // Destrutor virtual é importante para classes base polimórficas
     virtual ~Hittable() = default;

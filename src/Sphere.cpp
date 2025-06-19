@@ -1,7 +1,8 @@
 #include "Sphere.h"
+#include "Operations.h"
+#include "Ray.h"
 #include <iostream>
 #include <cmath>
-#include <vector>
 
 // Construtores
 Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
@@ -13,9 +14,9 @@ void Sphere::print() {
 }
 
 // Getters
-Point Sphere::getCenter() const { return center; }
-double Sphere::getRadius() const { return radius; }
-Vector Sphere::getColour() const { return colour; }
+const Point& Sphere::getCenter() const { return center; }
+const double& Sphere::getRadius() const { return radius; }
+const Vector& Sphere::getColour() const { return colour; }
 
 // Setters
 void Sphere::setCenter(Point newCenter) { center = newCenter; }
@@ -44,25 +45,27 @@ HitRecord Sphere::hit(const Ray& r) const {
     // Se o discriminante for < 0 então não temos raízes reais, ou seja não há interseção
     if (discriminant < 0) { return {}; }
     
-    // Lista de pontos que intersectam o objeto
-    std::vector<Point> pointHitList;
+    HitRecord rec;
     // t1 e t2 são os valores de t que satisfazem a(s) interseção(ões)
     double t1;
     // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
-        pointHitList.push_back(r.origin() + (t1 * r.direction()));
-        return pointHitList;
+        rec.t = t1;
+        rec.hit_point = r.origin() + (rec.t * r.direction());
+        rec.material_color = getColour();
+        rec.normal = rec.hit_point - getCenter();
+    } else {
+        // Se o discriminante for > 0 então temos duas raízes, ou seja há interseção
+        double root = sqrt(discriminant);
+        double t2 = t1 = root;
+        t1 = (-b + t1) / (2 * a);
+        t2 = (-b - t2) / (2 * a);
+        rec.t = t1 < t2 ? t1 : t2;
+        rec.hit_point = r.origin() + (rec.t * r.direction());
+        rec.material_color = getColour();
+        rec.normal = rec.hit_point - getCenter();
     }
     
-    // Se o discriminante for > 0 então temos duas raízes, ou seja há interseção
-    double root = sqrt(discriminant);
-    double t2 = t1 = root;
-    t1 = (-b + t1) / (2 * a);
-    t2 = (-b - t2) / (2 * a);
-
-    if (t1 > 0) { pointHitList.push_back(r.origin() + (t1 * r.direction())); }
-    if (t2 > 0) { pointHitList.push_back(r.origin() + (t2 * r.direction())); }
-    
-    return pointHitList;
+    return rec;
 }

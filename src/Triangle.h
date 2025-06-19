@@ -1,13 +1,13 @@
 #pragma once
+#include "Hittable.h"
 #include "Point.h"
 #include "Vector.h"
-#include "Hittable.h"
 
 class Triangle : public Hittable {
 private:
-    Point x;
-    Point y;
-    Point z;
+    Point a;
+    Point b;
+    Point c;
     Vector colour;
     Vector normal;
 
@@ -19,19 +19,24 @@ public:
     void print();
 
     // Getters
-    Point getX() const;
-    Point getY() const;
-    Point getZ() const;
-    Vector getColour() const override;
-    Vector getNormal() const;
+    const Point& getA() const;
+    const Point& getB() const;
+    const Point& getC() const;
+    const Vector& getColour() const override;
+    const Vector& getNormal() const;
 
     // Setters
-    void setX(Point newX);
-    void setY(Point newY);
-    void setZ(Point newZ);
+    void setA(Point newA);
+    void setB(Point newB);
+    void setC(Point newC);
     void setColour(Vector newColour);
     void setNormal(Vector newNormal);
 
     // Interseção de um vetor com o triangulo
     HitRecord hit(const Ray& r) const override;
+
+    // Retorna true se o ponto puder ser definido a partir dos três 
+    // vetores dados, isto é, o ponto está dentro do triângulo,
+    // caso contrário retorna false
+    bool has(Point p) const;
 };

@@ -1,6 +1,7 @@
+#pragma once
+#include "Hittable.h"
 #include "Point.h"
 #include "Vector.h"
-#include "Hittable.h"
 
 class Plane : public Hittable {
 private:
@@ -13,9 +14,9 @@ public:
     Plane(Point newPlanePoint, Vector newNormal, Vector newColor);
 
     // Getters
-    Point getPlanePoint() const;
-    Vector getNormal() const;
-    Vector getColour() const override;
+    const Point& getPlanePoint() const;
+    const Vector& getNormal() const;
+    const Vector& getColour() const override;
     
     // Setters
     void setPlanePoint(Point& planePoint);
