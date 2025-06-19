@@ -111,3 +111,33 @@ double green(const double& a) {
 double blue(const double& a) {
     return a/255;
 }
+
+// Vetor * Matriz = Vetor
+Vector vectorProduct(const Matrix& m, const Vector& v) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            //m.matrixArray[i][j]
+        }
+    }
+    return Vector(0, 0, 0);
+}
+
+
+/*Vector operator*(const Vector& v, Matrix& m) {
+    return (m * v); // Reutiliza a função acima
+} */
+
+// Ponto * Matriz = Ponto
+Point operator*(const Matrix& m, const Point& p) {
+    return Point(0, 0, 0);
+}
+
+Point pointProduct(const Matrix& m, const Point& p) {
+    return Point(0, 0, 0);
+}
+
+
+
+/* Point operator*(const Point& v, Matrix& m) {
+    return Point(0, 0, 0);
+} */
