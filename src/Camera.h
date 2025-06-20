@@ -18,7 +18,7 @@ private:
     unsigned int h_res;  // Resolução horizontal
     Vector U, V, W;      // Vetores da base da câmera. W é para trás. U é para direita. V é para cima.
     double fieldOfView;  // Angulo do campo de visão da câmera em graus
-    Screen s;            // Tela de projeção
+    Screen screen;            // Tela de projeção
     double aspectRatio;  // Proporção da tela
 
     void calculateBasis();
@@ -51,5 +51,5 @@ public:
     void setU(const Vector& newU);
     void setV(const Vector& newV);
     void setW(const Vector& newW);
-    void setS(const Point& p, Vector horizontal, Vector vertical);
+    void createScreen(const Point& p, Vector horizontal, Vector vertical);
 };

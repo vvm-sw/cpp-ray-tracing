@@ -11,7 +11,7 @@ Camera::Camera(const Point& location, const Point& pointingAt, const Vector& wor
     double halfHeight = tan(theta/2);
     double halfWidth = aspectRatio * halfHeight;
     Point corner = location - (distance * W) - (halfWidth * U) - (halfHeight * V);
-    setS(corner, 2*halfWidth*U, 2*halfHeight*V);
+    createScreen(corner, 2*halfWidth*U, 2*halfHeight*V);
 }
 
 // Getters
@@ -25,7 +25,7 @@ double Camera::getFOV() const { return fieldOfView; }
 Vector Camera::getU() const { return U; } // Vetor "direita"
 Vector Camera::getV() const { return V; } // Vetor "para cima" real
 Vector Camera::getW() const { return W; } // Vetor "para trás"
-Screen Camera::getScreen() const { return s; }
+Screen Camera::getScreen() const { return screen; }
 
 // Setters
 void Camera::setLocation(const Point& loc) {
@@ -63,8 +63,8 @@ void Camera::calculateBasis() {
     V = cross(W, U); // Não precisa normalizar, pois U e W já são ortonormais
 }
 
-void Camera::setS(const Point& p, Vector horizontal, Vector vertical) {
-    s.lower_left_corner = p;
-    s.horizontal = horizontal;
-    s.vertical = vertical;
+void Camera::createScreen(const Point& p, Vector horizontal, Vector vertical) {
+    screen.lower_left_corner = p;
+    screen.horizontal = horizontal;
+    screen.vertical = vertical;
 }
