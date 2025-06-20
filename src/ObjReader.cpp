@@ -61,7 +61,7 @@ struct Face {
     }
 };
 
-class objReader {
+class ObjReader {
 
 private:
     std::ifstream file;                         // Arquivo .obj
@@ -70,10 +70,10 @@ private:
     std::vector<Face> faces;                    // Lista de indices de faces
     std::vector<std::vector<Point>> facePoints; // Lista de pontos das faces
     MaterialProperties curMaterial;             // Material atual
-    colormap cmap;                              // Objeto de leitura de arquivos .mtl
+    Colormap cmap;                              // Objeto de leitura de arquivos .mtl
 
 public:
-    objReader(std::string filename) : cmap(cmap) {
+    ObjReader(std::string filename) : cmap(cmap) {
 
         // Abre o arquivo
         file.open(filename);
@@ -92,7 +92,7 @@ public:
             if (prefix == "mtllib") {
                 iss >> filename_mtl;
                 std::string filename_mtl_path = filename.replace(filename.length() - 3, 3, "mtl");
-                cmap = colormap(filename_mtl_path);
+                cmap = Colormap(filename_mtl_path);
             } else if (prefix == "usemtl") {
                 iss >> colorname;
                 curMaterial = cmap.getMaterialProperties(colorname);

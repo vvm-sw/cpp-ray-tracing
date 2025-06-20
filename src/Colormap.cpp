@@ -39,14 +39,14 @@ struct MaterialProperties {
     MaterialProperties() : kd(0, 0, 0), ks(0, 0, 0), ke(0, 0, 0), ka(0, 0, 0), ns(0), ni(0), d(0) {}
 };
 
-class colormap {
+class Colormap {
 
 public:
     map<string, MaterialProperties> mp;
 
     //Construtor    
-    colormap(){};
-    colormap(string input){
+    Colormap(){};
+    Colormap(string input){
 
         // construtor: lê arquivo cores.mtl e guarda valores RGB associados a cada nome
 

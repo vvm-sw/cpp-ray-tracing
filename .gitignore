@@ -15,5 +15,6 @@ cmake-build-*/
 
 #Outputs
 *.ppm
+!image.ppm
 *.exe
 *.out
