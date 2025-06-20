@@ -55,10 +55,14 @@ double green(const double& a);
 // Retorna o valor do azul normalizado (entre 0 e 1)
 double blue(const double& a);
 
-Point operator*(const Matrix& m, const Vector& v);
+Point pointProduct(Matrix m, Point p);
+
+Vector vectorProduct(Matrix m, Vector v);
+
+/*Point operator*(const Matrix& m, const Vector& v);
 
 Vector operator*(const Vector& v, Matrix& m);
 
 Point operator*(const Matrix& m, const Point& p);
 
-Vector operator*(const Point& v, Matrix& m);
+Vector operator*(const Point& v, Matrix& m);*/
