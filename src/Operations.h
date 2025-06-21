@@ -57,8 +57,8 @@ double blue(const double& a);
 
 Vector operator*(const Matrix& m, const Vector& v);
 
-Vector operator*(const Vector& v, Matrix& m);
+Vector operator*(const Vector& v, const Matrix& m);
 
 Point operator*(const Matrix& m, const Point& p);
 
-Point operator*(const Point& p, Matrix& m);
+Point operator*(const Point& p, const Matrix& m);
