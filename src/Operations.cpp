@@ -113,7 +113,7 @@ double blue(const double& a) {
 }
 
 // Matriz * Vetor = Vetor
-Vector operator*(Matrix& m, Vector& v) {
+Vector operator*(const Matrix& m, const Vector& v) {
     double vArray[4] {v.getX(), v.getY(), v.getZ(), 1};
     double arrayResult[4] {0};
     for (int i = 0; i < 4; i++) {
@@ -125,12 +125,12 @@ Vector operator*(Matrix& m, Vector& v) {
 }
 
 // Vetor * Matriz = Vetor
-Vector operator*(Vector& v, Matrix& m) {
+Vector operator*(const Vector& v, const Matrix& m) {
     return m * v;
 }
 
 // Matriz * Ponto = Ponto
-Point operator*(Matrix& m, Point& p) {
+Point operator*(const Matrix& m, const Point& p) {
     double pArray[4] {p.getX(), p.getY(), p.getZ(), 1};
     double arrayResult[4] {0};
     for (int i = 0; i < 4; i++) {
@@ -142,6 +142,6 @@ Point operator*(Matrix& m, Point& p) {
 }
 
 // Ponto * Matriz = Ponto
-Point operator*(Point& p, Matrix& m) {
+Point operator*(const Point& p, const Matrix& m) {
     return m * p;
 }
