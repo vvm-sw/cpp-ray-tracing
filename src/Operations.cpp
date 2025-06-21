@@ -112,79 +112,36 @@ double blue(const double& a) {
     return a/255;
 }
 
-// Vetor * Matriz = Vetor
-Vector vectorProduct(Matrix m, const Vector& v) {
-        double  vArray[4] {v.getX(), v.getY(), v.getZ(), 1};
-        double arrayResult[4] = {0};
-        double auxX = 0;
-        double auxY = 0;
-        double auxZ = 0; 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            switch (i) {
-                case 0:
-                    auxX += m.matrixArray[i][j] * vArray[j];
-                case 1:
-                    auxY += m.matrixArray[i][j] * vArray[j];
-                case 2:
-                    auxZ += m.matrixArray[i][j] * vArray[j];              
-            }
+// Matriz * Vetor = Vetor
+Vector operator*(Matrix& m, Vector& v) {
+    double vArray[4] {v.getX(), v.getY(), v.getZ(), 1};
+    double arrayResult[4] {0};
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            arrayResult[i] += m.matrixArray[i][j] * vArray[j];
         }
     }
-    return Vector(auxX, auxY, auxZ);
+    return Vector(arrayResult[0], arrayResult[1], arrayResult[2]);
 }
 
+// Vetor * Matriz = Vetor
+Vector operator*(Vector& v, Matrix& m) {
+    return m * v;
+}
 
-/*Vector operator*(const Vector& v, Matrix& m) {
-    return (m * v); // Reutiliza a função acima
-} */
+// Matriz * Ponto = Ponto
+Point operator*(Matrix& m, Point& p) {
+    double pArray[4] {p.getX(), p.getY(), p.getZ(), 1};
+    double arrayResult[4] {0};
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            arrayResult[i] += m.matrixArray[i][j] * pArray[j];
+        }
+    }
+    return Point(arrayResult[0], arrayResult[1], arrayResult[2]);
+}
 
 // Ponto * Matriz = Ponto
-// Point operator*(const Matrix& m, const Point& p) {
-    
-//             double  vArray[4] {v.getX(), v.getY(), v.getZ(), 1};
-//         double arrayResult[4] = {0};
-//         double auxX = 0;
-//         double auxY = 0;
-//         double auxZ = 0; 
-//     for (int i = 0; i < 3; i++) {
-//         for (int j = 0; j < 3; j++) {
-//             switch (i) {
-//                 case 0:
-//                     auxX += m.matrixArray[i][j] * vArray[j];
-//                 case 1:
-//                     auxY += m.matrixArray[i][j] * vArray[j];
-//                 case 2:
-//                     auxZ += m.matrixArray[i][j] * vArray[j];              
-//             }
-//         }
-//     }
-//     return Point(auxX, auxY, auxZ);
-// }
-
-Point pointProduct(Matrix m, const Point p) {
-         double  vArray[4] {p.getX(), p.getY(), p.getZ(), 1};
-        double arrayResult[4] = {0};
-        double auxX = 0;
-        double auxY = 0;
-        double auxZ = 0; 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            switch (i) {
-                case 0:
-                    auxX += m.matrixArray[i][j] * vArray[j];
-                case 1:
-                    auxY += m.matrixArray[i][j] * vArray[j];
-                case 2:
-                    auxZ += m.matrixArray[i][j] * vArray[j];              
-            }
-        }
-    }
-    return Point(auxX, auxY, auxZ);
+Point operator*(Point& p, Matrix& m) {
+    return m * p;
 }
-
-
-
-/* Point operator*(const Point& v, Matrix& m) {
-    return Point(0, 0, 0);
-} */
