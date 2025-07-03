@@ -13,8 +13,11 @@ trashbin/
 # Arquivos do CLion
 cmake-build-*/
 
-#Outputs
+# Outputs
 *.ppm
 !image.ppm
 *.exe
 *.out
+
+# Exe do c
+main
