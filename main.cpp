@@ -41,14 +41,33 @@ Vector colour(const vector<Hittable*>& l,  const Ray& r) {
 }
 
 int main() {
-    string fileName = "image1-11";
-    ofstream exitRGB("img/" + fileName + ".ppm");
-    Camera c = Camera(Point(0, 0, 0), Point(1, 0, 0), Vector(0, 1, 0), 1, 200, 100, 90);
-    vector<Hittable*> objList;
-    Matrix m;
-
+    string fileName = "imagexxx1";
+    Matrix m(4);
+    // m.buildScale(1,2,1);
+    m.buildRotation(10, Vector());
+    int camX = -3;
+    int camY = -0;
+    int camZ = -0;
+    int widthScreen = 200;
+    int heightScreen = 100;
+    int fovCam = 90;
     // string objFile = "inputs/input.obj";
     string objFile = "inputs/cubo.obj";
+
+
+
+
+
+
+
+
+    ofstream exitRGB("img/" + fileName + ".ppm");
+    Camera c = Camera(Point(camX, camY, camZ), Point(1, 0, 0), Vector(0, 1, 0), 1, widthScreen, heightScreen, fovCam);
+    // X -> Para dentro ou para fora da tela
+    // y -> Para cima ou para baixo
+    // Z -> Para direita ou para esquerda
+    vector<Hittable*> objList;
+
     ObjReader objReader(objFile);
     vector<Face> objectFaces = objReader.getFaces();
     vector<vector<Point>> facePointsList = objReader.getFacePoints();
@@ -65,6 +84,8 @@ int main() {
     //     Vector colour = face.kd;
     //     objList.push_back(new Triangle(p0, p1, p2, colour));
     // }
+    objList.push_back(new Triangle(m * Point(3, 0, 0), m * Point(3, 2, 0), m * Point(3, 0, 4), Vector(0, 0, blue(255))));
+    // objList.push_back(new Triangle(Point(3, 0, 0), Point(3, 2, 0), Point(3, 0, 4), Vector(0, 0, blue(255))));
 
     // Inicio da lista de objetos a serem visto pela câmera
     // objList.clear();
@@ -76,18 +97,18 @@ int main() {
     // objList.push_back(new Sphere(Point(2, 1, 1.3), 0.1, Vector(red(255), 0, 0)));
     // objList.push_back(new Triangle(Point(3, 0, 0), Point(3, -2, -1), Point(3, -2, -4), Vector(0, 0, blue(255))));
     // objList.push_back(new Sphere(Point(2, -1, -1.3), 0.1, Vector(red(255), 0, 0)));
-    m.buildScaleMatrix(1.5, -1.5, 1.5);
-    Point ccc = m*Point(3,1,1);
-    objList.push_back(new Sphere(ccc, 1, Vector(0, 0, blue(255))));
-    m.buildScaleMatrix(1.5, 1.5, 1.5);
-    ccc = m*Point(3,1,1);
-    objList.push_back(new Sphere(ccc, 1, Vector(red(255), 0, 0)));
-    m.buildScaleMatrix(1.5, 1.5, -1.5);
-    ccc = m*Point(3,1,1);
-    objList.push_back(new Sphere(ccc, 1, Vector(red(255), green(255), 0)));
-    m.buildScaleMatrix(1.5, -1.5, -1.5);
-    ccc = m*Point(3,1,1);
-    objList.push_back(new Sphere(ccc, 1, Vector(red(255), 0, blue(255))));
+    // m.buildScale(1.5, -1.5, 1.5);
+    // Point ccc = m*Point(3,1,1);
+    // objList.push_back(new Sphere(ccc, 1, Vector(0, 0, blue(255))));
+    // m.buildScale(1.5, 1.5, 1.5);
+    // ccc = m*Point(3,1,1);
+    // objList.push_back(new Sphere(ccc, 1, Vector(red(255), 0, 0)));
+    // m.buildScale(1.5, 1.5, -1.5);
+    // ccc = m*Point(3,1,1);
+    // objList.push_back(new Sphere(ccc, 1, Vector(red(255), green(255), 0)));
+    // m.buildScale(1.5, -1.5, -1.5);
+    // ccc = m*Point(3,1,1);
+    // objList.push_back(new Sphere(ccc, 1, Vector(red(255), 0, blue(255))));
     // Point aaa = m*Point(3, 0, 0);
     // Point bbb = m*Point(3, 0, 1);
     // Point ccc = m*Point(3, 1, 1);
