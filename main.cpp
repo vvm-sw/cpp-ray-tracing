@@ -40,9 +40,17 @@ Vector colour(const vector<Hittable*>& l,  const Ray& r) {
 }
 
 int main() {
-    ofstream exitRGB("img/image.ppm");
-    Camera c = Camera(Point(-2.5, 0, 0), Point(1, 0, 0), Vector(0, 1, 0), 1, 200, 100, 90);
+    ofstream exitRGB("img/images3.ppm");
+    Camera c = Camera(Point(-2.5, 0, 0), Point(1, 0, 0), Vector(0, 1, 0), 1, 800, 600, 90);
     vector<Hittable*> objList;
+
+    Matrix m = Matrix();
+    Matrix rotX = Matrix();
+    rotX.BuildRotationOX(10);
+    m.buildReflexion(-1,-1,-1);
+   // m.buildScale(0.2,0.2,0.2);
+    Matrix translation = Matrix();
+   // m.buildTranslation(0, 2, 3);
 
     // string objFile = "inputs/input.obj";
     string objFile = "inputs/cubo.obj";
@@ -53,9 +61,12 @@ int main() {
     for (int k = 0; k < objectFaces.size(); ++k) { 
         Face face = objectFaces[k];
         vector<Point> currentFacePoints = facePointsList[k];
-        Point p0 = currentFacePoints[0];
-        Point p1 = currentFacePoints[1];
-        Point p2 = currentFacePoints[2];
+        // Point p0 = translation*(m*currentFacePoints[0]);
+        // Point p1 = translation*(m*currentFacePoints[1]);
+        // Point p2 = translation*(m*currentFacePoints[2]);
+        Point p0 = rotX*currentFacePoints[0];
+        Point p1 = rotX*currentFacePoints[1];
+        Point p2 = rotX*currentFacePoints[2];
         Vector colour = face.kd;
         objList.push_back(new Triangle(p0, p1, p2, colour));
     }

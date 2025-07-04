@@ -52,6 +52,8 @@ HitRecord Sphere::hit(const Ray& r) const {
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
         rec.t = t1;
+        //Matrix m = Matrix();
+        //m.buildScaleMatrix(2,2,2);
         rec.hit_point = r.origin() + (rec.t * r.direction());
         rec.material_color = getColour();
         rec.normal = rec.hit_point - getCenter();

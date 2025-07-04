@@ -22,11 +22,18 @@ void Matrix::buildRotation(double angle) {
     matrixArray[0][1] = -sin(angle) * cos(angle);
     matrixArray[0][2] = (cos(angle) * sin(angle)) + (pow(sin(angle), 2)) * cos(angle);
     matrixArray[1][0] = sin(angle) + cos(angle) + (cos(angle) * pow(sin(angle), 2));
-    matrixArray[0][1] = pow(cos(angle), 2);
+    matrixArray[1][1] = pow(cos(angle), 2);
     matrixArray[1][2] = pow(sin(angle), 2) + (pow(cos(angle), 2) * -sin(angle));  
     matrixArray[2][0] = cos(angle) * (-sin(angle));
     matrixArray[2][1] = sin(angle);
     matrixArray[2][2] = pow(cos(angle), 2);
+}
+void Matrix::BuildRotationOX(double a) {
+    matrixArray[0][0] = 1;
+    matrixArray[1][1] = cos(a);
+    matrixArray[1][2] = -sin(a);
+    matrixArray[2][1] = sin(a);
+    matrixArray[2][2] = cos(a);
 }
 
 void Matrix::buildTranslation(double x, double y, double z) {
