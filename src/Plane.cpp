@@ -77,3 +77,9 @@ HitRecord Plane::hit (const Ray& r) const {
     
     return rec;
 }
+
+void Plane::rotateAll(double angle) {}
+void Plane::rotateX(double angle) {}
+void Plane::rotateY(double angle) {}
+void Plane::rotateZ(double angle) {}
+void Plane::transfer(Vector distances) {}

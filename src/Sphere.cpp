@@ -69,3 +69,9 @@ HitRecord Sphere::hit(const Ray& r) const {
     
     return rec;
 }
+
+void Sphere::rotateAll(double angle) {}
+void Sphere::rotateX(double angle) {}
+void Sphere::rotateY(double angle) {}
+void Sphere::rotateZ(double angle) {}
+void Sphere::transfer(Vector distances) {}
