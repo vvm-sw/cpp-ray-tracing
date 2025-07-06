@@ -31,4 +31,10 @@ public:
 
     // Interseção de um vetor com a esfera
     HitRecord hit(const Ray& r) const override;
+
+    void rotateAll(double angle) override;
+    void rotateX(double angle) override;
+    void rotateY(double angle) override;
+    void rotateZ(double angle) override;
+    void transfer(Vector distances) override;
 };

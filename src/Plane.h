@@ -25,6 +25,12 @@ public:
 
     // Hit
     HitRecord hit(const Ray& ray) const override;
+
+    void rotateAll(double angle) override;
+    void rotateX(double angle) override;
+    void rotateY(double angle) override;
+    void rotateZ(double angle) override;
+    void transfer(Vector distances) override;
 };
 
 

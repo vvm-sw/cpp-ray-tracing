@@ -24,7 +24,7 @@ public:
     Point(double x, double y, double z);
 
     // Print do vetor no formato (x, y, z)
-    void print();
+    void print() const;
 
     // Getters
     const double& getX() const;

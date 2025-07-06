@@ -1,4 +1,5 @@
 #include "Operations.h"
+#include <iostream>
 
 // Adição: Ponto + Vetor = Ponto
 Point operator+(const Point& p, const Vector& v) {
@@ -144,4 +145,33 @@ Point operator*(const Matrix& m, const Point& p) {
 // Ponto * Matriz = Ponto
 Point operator*(const Point& p, const Matrix& m) {
     return m * p;
+}
+
+// Matriz * Matriz = Matriz
+Matrix operator*(const Matrix& m1, const Matrix& m2) {
+    if (m1.width != m2.height) {
+        std::cerr << "ERROR: As matrizes não podem ser multiplicadas. "
+                  << "Número de colunas da primeira (" << m1.width << ") "
+                  << "diferente do número de linhas da segunda (" << m2.height << ")."
+                  << std::endl;
+        return Matrix(0, 0);
+    }
+
+    Matrix result(m1.height, m2.width);
+
+    for (int i = 0; i < m1.height; ++i) { // Linhas da matriz resultante (m1)
+        for (int j = 0; j < m2.width; ++j) { // Colunas da matriz resultante (m2)
+            for (int k = 0; k < m1.width; ++k) { // Colunas de m1 (linhas de m2)
+                result.matrixArray[i][j] += m1.matrixArray[i][k] * m2.matrixArray[k][j];
+            }
+        }
+    }
+    result.height = m1.height;
+    result.width = m2.width;
+    return result;
+}
+
+// Retorna em radianos o ângulo entrado (ang)
+double rad(double ang) {
+    return (ang * M_PI) / 180;
 }

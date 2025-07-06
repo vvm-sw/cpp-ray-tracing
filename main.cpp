@@ -13,6 +13,7 @@
 #include <limits>
 #include <string>
 #include <fstream> // Biblioteca para "File Stream" (fluxo de arquivos)
+#include "src/Colours.h"
 
 using namespace std;
 
@@ -40,101 +41,87 @@ Vector colour(const vector<Hittable*>& l,  const Ray& r) {
     return closest.material_color;
 }
 
+string paintScreen(int i, int j, Camera c, vector<Hittable*> objList) {
+    // Normaliza as coordenadas do pixel para (u,v) entre 0.0 e 1.0
+    double u = double(i) / double(c.getHRes());
+    double v = double(j) / double(c.getVRes());
+    
+    Point target = c.getScreen().lower_left_corner + (u * c.getScreen().horizontal) + (v * c.getScreen().vertical);
+    Ray r = Ray(c.getLocation(), target - c.getLocation());
+    
+    // Calcula a cor para o raio, passando a lista de objetos
+    Vector col = colour(objList, r);
+
+    // Converte a cor para o formato de 0 a 255 e imprime
+    int ir = int(255 * col.getX());
+    int ig = int(255 * col.getY());
+    int ib = int(255 * col.getZ());
+
+    return (to_string(ir) + " " + to_string(ig) + " " + to_string(ib));
+}
+
 int main() {
-    string fileName = "imagexxx1";
-    Matrix m(4);
-    // m.buildScale(1,2,1);
-    m.buildRotation(10, Vector());
+    string fileName = "letsSee3";
     int camX = -3;
     int camY = -0;
     int camZ = -0;
-    int widthScreen = 200;
-    int heightScreen = 100;
-    int fovCam = 90;
     // string objFile = "inputs/input.obj";
     string objFile = "inputs/cubo.obj";
-
-
-
-
-
-
-
-
+    
     ofstream exitRGB("img/" + fileName + ".ppm");
-    Camera c = Camera(Point(camX, camY, camZ), Point(1, 0, 0), Vector(0, 1, 0), 1, widthScreen, heightScreen, fovCam);
+    Camera c = Camera(Point(camX, camY, camZ), Point(1, 0, 0), Vector(0, 1, 0));
     // X -> Para dentro ou para fora da tela
     // y -> Para cima ou para baixo
     // Z -> Para direita ou para esquerda
     vector<Hittable*> objList;
-
     ObjReader objReader(objFile);
     vector<Face> objectFaces = objReader.getFaces();
     vector<vector<Point>> facePointsList = objReader.getFacePoints();
+    
+    // ----------------------------------------------------
+    // Inicio da lista de objetos a serem visto pela câmera
+    Triangle original = Triangle(Point(3, -2, -2), Point(3, -1, -2), Point(3, -2, -1), RED);
+    Triangle t1 = original, t2 = original, t3 = original, t4 = original, t5 = original;
+    t1.setColour(BLUE);
+    t2.setColour(GREEN);
+    t3.setColour(MAGENTA);
+    t4.setColour(ORANGE);
+    t5.setColour(BROWN);
+    t1.transfer(Vector(0,4,4));
+    t2.transfer(Vector(0,4,0));
+    t3.transfer(Vector(0,0,4));
+    t4.transfer(Vector(0,2,6));
+    t5.transfer(Vector(0,2,-2));
+
+    t1.rotateZ(rad(45));
+    t2.rotateX(rad(45));
+    t3.rotateY(rad(45));
+    t4.rotateAll(rad(45));
+    t5.rotateX(rad(45));
+    t5.rotateY(rad(45));
+    t5.rotateZ(rad(45));
+    objList.push_back(&original);
+    objList.push_back(&t1);
+    objList.push_back(&t2);
+    objList.push_back(&t3);
+    objList.push_back(&t4);
+    objList.push_back(&t5);
+    objList.push_back(new Sphere(Point(0,0,0),0.03,Vector(red(255),0,0)));
 
     // for (int k = 0; k < objectFaces.size(); ++k) { 
-    //     Face face = objectFaces[k];
-    //     vector<Point> currentFacePoints = facePointsList[k];
-    //     Point p0 = currentFacePoints[0];
-    //     Point p1 = currentFacePoints[1];
-    //     Point p2 = currentFacePoints[2];
-    //     p0 = m * p0;
-    //     p1 = m * p1;
-    //     p2 = m * p2;
-    //     Vector colour = face.kd;
-    //     objList.push_back(new Triangle(p0, p1, p2, colour));
+    //     Point p0 = facePointsList[k][0];
+    //     Point p1 = facePointsList[k][1];
+    //     Point p2 = facePointsList[k][2];
+    //     objList.push_back(new Triangle(p0, p1, p2, objectFaces[k].kd));
     // }
-    objList.push_back(new Triangle(m * Point(3, 0, 0), m * Point(3, 2, 0), m * Point(3, 0, 4), Vector(0, 0, blue(255))));
-    // objList.push_back(new Triangle(Point(3, 0, 0), Point(3, 2, 0), Point(3, 0, 4), Vector(0, 0, blue(255))));
-
-    // Inicio da lista de objetos a serem visto pela câmera
-    // objList.clear();
-    // objList.push_back(new Plane(Point(0, -3, 0), Vector(0.5, 1, 0), Vector(0, green(255), 0)));
-    // objList.push_back(new Plane(Point(0, -6, 0), Vector(0.25, 1, 0), Vector(0, green(255), blue(255))));
-    // objList.push_back(new Plane(Point(0, -12, 0), Vector(0, 1, 0), Vector(red(100), green(100), blue(100))));
-    // objList.push_back(new Sphere(Point(4, 0, 0), 1, Vector(red(255), 0, 0)));
-    // objList.push_back(new Triangle(Point(3, 0, 0), Point(3, 2, 1), Point(3, 2, 4), Vector(0, 0, blue(255))));
-    // objList.push_back(new Sphere(Point(2, 1, 1.3), 0.1, Vector(red(255), 0, 0)));
-    // objList.push_back(new Triangle(Point(3, 0, 0), Point(3, -2, -1), Point(3, -2, -4), Vector(0, 0, blue(255))));
-    // objList.push_back(new Sphere(Point(2, -1, -1.3), 0.1, Vector(red(255), 0, 0)));
-    // m.buildScale(1.5, -1.5, 1.5);
-    // Point ccc = m*Point(3,1,1);
-    // objList.push_back(new Sphere(ccc, 1, Vector(0, 0, blue(255))));
-    // m.buildScale(1.5, 1.5, 1.5);
-    // ccc = m*Point(3,1,1);
-    // objList.push_back(new Sphere(ccc, 1, Vector(red(255), 0, 0)));
-    // m.buildScale(1.5, 1.5, -1.5);
-    // ccc = m*Point(3,1,1);
-    // objList.push_back(new Sphere(ccc, 1, Vector(red(255), green(255), 0)));
-    // m.buildScale(1.5, -1.5, -1.5);
-    // ccc = m*Point(3,1,1);
-    // objList.push_back(new Sphere(ccc, 1, Vector(red(255), 0, blue(255))));
-    // Point aaa = m*Point(3, 0, 0);
-    // Point bbb = m*Point(3, 0, 1);
-    // Point ccc = m*Point(3, 1, 1);
-    // objList.push_back(new Triangle(aaa, bbb, ccc, Vector(0, 0, blue(255))));
-    // Fim da lista de objetos a serem visto pela câmera
     
-    // std::cout << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
+    // Fim da lista de objetos a serem visto pela câmera
+    // ----------------------------------------------------
+    
     exitRGB << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
     for (int j = c.getVRes() - 1; j >= 0; j--) { // de cima para baixo
         for (int i = 0; i < c.getHRes(); i++) { // da esquerda para direita
-            // Normaliza as coordenadas do pixel para (u,v) entre 0.0 e 1.0
-            double u = double(i) / double(c.getHRes());
-            double v = double(j) / double(c.getVRes());
-            
-            Point target = c.getScreen().lower_left_corner + (u * c.getScreen().horizontal) + (v * c.getScreen().vertical);
-            Ray r = Ray(c.getLocation(), target - c.getLocation());
-            
-            // Calcula a cor para o raio, passando a lista de objetos
-            Vector col = colour(objList, r);
-
-            // Converte a cor para o formato de 0 a 255 e imprime
-            int ir = int(255 * col.getX());
-            int ig = int(255 * col.getY());
-            int ib = int(255 * col.getZ());
-            // std::cout << ir << " " << ig << " " << ib << "\n";
-            exitRGB << ir << " " << ig << " " << ib << "\n";
+            exitRGB << paintScreen(i, j, c, objList) << "\n";
         }
     }
 

@@ -19,6 +19,12 @@ public:
     // Classes filhas SÃO OBRIGADAS a implementar esta função.
     virtual HitRecord hit(const Ray& r) const = 0;
     virtual const Vector& getColour() const = 0;
+    virtual void rotateAll(double angle) = 0;
+    virtual void rotateX(double angle) = 0;
+    virtual void rotateY(double angle) = 0;
+    virtual void rotateZ(double angle) = 0;
+    virtual void transfer(Vector distances) = 0;
+    virtual void print() {}
     
     // Destrutor virtual é importante para classes base polimórficas
     virtual ~Hittable() = default;

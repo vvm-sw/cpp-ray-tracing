@@ -15,10 +15,10 @@ class Matrix {
 
     void buildScale(double sx, double sy, double sz);
     void buildReflexion(double sx, double sy, double sz);
-    void buildRotation(double angle, Vector axis);
-    void Matrix::buildRotationX(double angle);
-    void Matrix::buildRotationY(double angle);
-    void Matrix::buildRotationZ(double angle);
-    void buildTranslation(std::vector<double> valuesList);
+    void buildRotation(double angle);
+    void buildRotationX(double angle);
+    void buildRotationY(double angle);
+    void buildRotationZ(double angle);
+    void buildTranslation(Vector t);
     void buildDiagonal(std::vector<double> valuesList);
 };
