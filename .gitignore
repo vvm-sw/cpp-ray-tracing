@@ -9,6 +9,7 @@ trashbin/
 *.vcxproj
 *.vcxproj.filters
 *.user
+etc/
 
 # Arquivos do CLion
 cmake-build-*/
