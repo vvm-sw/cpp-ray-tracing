@@ -25,7 +25,7 @@ private:
 
 public:
     // Construtores
-    Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res, double fieldOfView);
+    Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance = 1, unsigned int h_res = 0, unsigned int v_res = 0, double aspectRatio = 0, double fieldOfView = 0);
 
     // Getters
     Point getLocation() const;
