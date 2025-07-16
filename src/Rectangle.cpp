@@ -16,16 +16,38 @@ Rectangle::Rectangle(Point p0_in, double width, double length, Vector col)
     normal = cross(edgeU, edgeV).normalized();
 }
 
+// Getters
+const Point& Rectangle::getP0() const { return p0; }
+
+const Vector& Rectangle::getWidth() const { return edgeU; }
+
+const Vector& Rectangle::getLength() const { return edgeV; }
+
+const Vector& Rectangle::getColour() const { return colour; }
+
+const Vector& Rectangle::getNormal() const { return normal; }
+
+// Setters
+void Rectangle::setP0(Point newP0) { p0 = newP0; }
+
+void Rectangle::setWidth(double newWidth) { edgeU = Vector(newWidth, 0, 0); }
+
+void Rectangle::setLength(double newLength) { edgeV = Vector(0, newLength, 0); }
+
+void Rectangle::setColour(Vector newColour) { colour = newColour; }
+
+void Rectangle::setNormal(Vector newNormal) { normal = newNormal; }
+
 HitRecord Rectangle::hit(const Ray& r) const {
     HitRecord rec;
 
     double denom = dot(r.direction(), normal);
-    if (fabs(denom) < 1e-8)
-        return rec; // Raio paralelo
+    if (denom == 0)
+        return {}; // Raio paralelo
 
     double t = dot(p0 - r.origin(), normal) / denom;
-    if (t <= 0)
-        return rec; // Atrás do olho
+    if (t < 0)
+        return {}; // Atrás do olho
 
     Point p = r.point_at_parameter(t);
     Vector d = p - p0;
@@ -34,7 +56,7 @@ HitRecord Rectangle::hit(const Ray& r) const {
     double v = dot(d, edgeV.normalized());
 
     if (u < 0 || u > edgeU.magnitude() || v < 0 || v > edgeV.magnitude())
-        return rec; // Fora do retângulo
+        return {}; // Fora do retângulo
 
     rec.t = t;
     rec.hit_point = p;
@@ -47,39 +69,82 @@ HitRecord Rectangle::hit(const Ray& r) const {
 }
 
 void Rectangle::rotateX(double angle) {
-    Matrix m(4);
-    m.buildRotationX(angle);
-    p0 = m * p0;
-    edgeU = m * edgeU;
-    edgeV = m * edgeV;
+    Point pivot = p0 + 0.5 * edgeU + 0.5 * edgeV;
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotationX(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    Point p1 = p0 + edgeU;
+    Point p2 = p0 + edgeV;
+    
+    p0 = p0 * result;
+    p1 = p1 * result;
+    p2 = p2 * result;
+    edgeU = p1 - p0;
+    edgeV = p2 - p0;
+
     normal = cross(edgeU, edgeV).normalized();
 }
 
 void Rectangle::rotateY(double angle) {
-    Matrix m(4);
-    m.buildRotationY(angle);
-    p0 = m * p0;
-    edgeU = m * edgeU;
-    edgeV = m * edgeV;
+    Point pivot = p0 + 0.5 * edgeU + 0.5 * edgeV;
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotationY(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    Point p1 = p0 + edgeU;
+    Point p2 = p0 + edgeV;
+    
+    p0 = p0 * result;
+    p1 = p1 * result;
+    p2 = p2 * result;
+    edgeU = p1 - p0;
+    edgeV = p2 - p0;
+
     normal = cross(edgeU, edgeV).normalized();
 }
 
 void Rectangle::rotateZ(double angle) {
-    Matrix m(4);
-    m.buildRotationZ(angle);
-    p0 = m * p0;
-    edgeU = m * edgeU;
-    edgeV = m * edgeV;
+    Point pivot = p0 + 0.5 * edgeU + 0.5 * edgeV;
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotationZ(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    Point p1 = p0 + edgeU;
+    Point p2 = p0 + edgeV;
+    
+    p0 = p0 * result;
+    p1 = p1 * result;
+    p2 = p2 * result;
+    edgeU = p1 - p0;
+    edgeV = p2 - p0;
+
     normal = cross(edgeU, edgeV).normalized();
 }
 
 void Rectangle::rotateAll(double angle) {
-    Matrix m(4);
-    m.buildRotation(angle);
-    p0 = m * p0;
-    edgeU = m * edgeU;
-    edgeV = m * edgeV;
-    normal = cross(edgeU, edgeV).normalized();
+
 }
 
 void Rectangle::transfer(Vector d) {

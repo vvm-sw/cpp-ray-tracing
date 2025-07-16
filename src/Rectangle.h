@@ -1,5 +1,4 @@
-#ifndef RECTANGLE_H
-#define RECTANGLE_H
+#pragma once
 
 #include "Hittable.h"
 #include "Ray.h"
@@ -16,17 +15,30 @@ private:
 
 public:
     Rectangle(Point p0, double width, double length, Vector colour);
+    
+    // Print do vetor no formato <P0: ('value'), Width: ('value'), Length: ('value')>
+    void print() const;
 
-    virtual HitRecord hit(const Ray& r) const override;
-    virtual void rotateX(double angle) override;
-    virtual void rotateY(double angle) override;
-    virtual void rotateZ(double angle) override;
-    virtual void rotateAll(double angle) override;
-    virtual void transfer(Vector d) override;
+    // Getters
+    const Point& getP0() const;
+    const Vector& getWidth() const;
+    const Vector& getLength() const;
+    const Vector& getColour() const override;
+    const Vector& getNormal() const;
 
-    void print() const ;
+    // Setters
+    void setP0(Point newP0);
+    void setWidth(double newWidth);
+    void setLength(double newLength);
+    void setColour(Vector newColour);
+    void setNormal(Vector newNormal);
 
-    const Vector& getColour() const { return colour; }
+    // Interseção de um vetor com o retangulo
+    HitRecord hit(const Ray& r) const override;
+
+    void rotateAll(double angle) override;
+    void rotateX(double angle) override;
+    void rotateY(double angle) override;
+    void rotateZ(double angle) override;
+    void transfer(Vector d) override;
 };
-
-#endif
