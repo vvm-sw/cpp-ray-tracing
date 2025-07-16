@@ -48,23 +48,36 @@ HitRecord Sphere::hit(const Ray& r) const {
     HitRecord rec;
     // t1 e t2 são os valores de t que satisfazem a(s) interseção(ões)
     double t1;
+    // Um pequeno epsilon (t_min) para evitar artefatos de precisão (z-fighting)
+    // Epsilon é importante para evitar que objetos "encostando" na câmera ou um no outro
+    // causem problemas de interseção.
+    double t_min = 0.01;
     // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
-        rec.t = t1;
-        rec.hit_point = r.origin() + (rec.t * r.direction());
-        rec.material_color = getColour();
-        rec.normal = rec.hit_point - getCenter();
+        if (t1 > t_min) {
+            rec.t = t1;
+            rec.hit_point = r.origin() + (rec.t * r.direction());
+            rec.material_color = getColour();
+            rec.normal = rec.hit_point - getCenter();
+        } else {
+            return {};
+        }
     } else {
         // Se o discriminante for > 0 então temos duas raízes, ou seja há interseção
         double root = sqrt(discriminant);
         double t2 = t1 = root;
         t1 = (-b + t1) / (2 * a);
         t2 = (-b - t2) / (2 * a);
-        rec.t = t1 < t2 ? t1 : t2;
-        rec.hit_point = r.origin() + (rec.t * r.direction());
-        rec.material_color = getColour();
-        rec.normal = rec.hit_point - getCenter();
+        double tres = t1 < t2 ? t1 : t2;
+        if (tres > t_min) {
+            rec.t = tres;
+            rec.hit_point = r.origin() + (rec.t * r.direction());
+            rec.material_color = getColour();
+            rec.normal = rec.hit_point - getCenter();
+        } else {
+            return {};
+        }
     }
     
     return rec;
