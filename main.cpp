@@ -5,6 +5,7 @@
 #include "src/Sphere.h"
 #include "src/Plane.h"
 #include "src/Triangle.h"
+#include "src/Rectangle.h"
 #include "src/Camera.h"
 #include "src/Colormap.cpp"
 #include "src/ObjReader.cpp"
@@ -12,7 +13,7 @@
 #include <vector>
 #include <limits>
 #include <string>
-#include <fstream> // Biblioteca para "File Stream" (fluxo de arquivos)
+#include <fstream>
 #include "src/Colours.h"
 
 using namespace std;
@@ -61,52 +62,43 @@ string paintScreen(int i, int j, Camera c, vector<Hittable*> objList) {
 }
 
 int main() {
-    string fileName = "letsSee3";
-    int camX = -3;
-    int camY = -0;
-    int camZ = -0;
-    // string objFile = "inputs/input.obj";
+    string fileName = "letsSee";
     string objFile = "inputs/cubo.obj";
+    double camX = 0;
+    double camY = 0;
+    double camZ = 0;
     
+
+
     ofstream exitRGB("img/" + fileName + ".ppm");
-    Camera c = Camera(Point(camX, camY, camZ), Point(1, 0, 0), Vector(0, 1, 0));
-    // X -> Para dentro ou para fora da tela
-    // y -> Para cima ou para baixo
-    // Z -> Para direita ou para esquerda
+    Camera c = Camera({camX, camY, camZ}, {0, 0, -1}, {0, 1, 0});
     vector<Hittable*> objList;
-    ObjReader objReader(objFile);
-    vector<Face> objectFaces = objReader.getFaces();
-    vector<vector<Point>> facePointsList = objReader.getFacePoints();
+    // X -> Para direita ou para esquerda
+    // y -> Para cima ou para baixo
+    // Z -> Para dentro ou para fora da tela
+    // ObjReader objReader(objFile);
+    // vector<Face> objectFaces = objReader.getFaces();
+    // vector<vector<Point>> facePointsList = objReader.getFacePoints();
     
     // ----------------------------------------------------
     // Inicio da lista de objetos a serem visto pela câmera
-    Triangle original = Triangle(Point(3, -2, -2), Point(3, -1, -2), Point(3, -2, -1), RED);
-    Triangle t1 = original, t2 = original, t3 = original, t4 = original, t5 = original;
-    t1.setColour(BLUE);
-    t2.setColour(GREEN);
-    t3.setColour(MAGENTA);
-    t4.setColour(ORANGE);
-    t5.setColour(BROWN);
-    t1.transfer(Vector(0,4,4));
-    t2.transfer(Vector(0,4,0));
-    t3.transfer(Vector(0,0,4));
-    t4.transfer(Vector(0,2,6));
-    t5.transfer(Vector(0,2,-2));
-
-    t1.rotateZ(rad(45));
-    t2.rotateX(rad(45));
-    t3.rotateY(rad(45));
-    t4.rotateAll(rad(45));
-    t5.rotateX(rad(45));
-    t5.rotateY(rad(45));
-    t5.rotateZ(rad(45));
-    objList.push_back(&original);
-    objList.push_back(&t1);
-    objList.push_back(&t2);
-    objList.push_back(&t3);
-    objList.push_back(&t4);
-    objList.push_back(&t5);
-    objList.push_back(new Sphere(Point(0,0,0),0.03,Vector(red(255),0,0)));
+    Triangle t = Triangle({-0.6, -0.4, -3}, {0.4, -0.4, -3}, {0.4, 0.4, -3}, BLUE);
+    Sphere s = Sphere({0,0,-3},0.3,RED);
+    Rectangle axisX = Rectangle({-1.7,-1,-2}, 0.03, 0.6, RED);
+    Rectangle axisY = Rectangle({-1.7,-1,-2}, 0.03, 0.6, GREEN);
+    Rectangle axisZ = Rectangle({-1.7,-1,-2}, 0.03, 0.6, BLUE);
+    objList.push_back(&t);
+    objList.push_back(&s);
+    objList.push_back(&axisX);
+    objList.push_back(&axisZ);
+    objList.push_back(&axisY);
+    t.rotateZ(rad(45));
+    t.rotateX(rad(45));
+    t.rotateY(rad(45));
+    axisZ.rotateX(rad(90));
+    axisX.rotateZ(rad(90));
+    axisZ.transfer({-0.178,-0.39,-0.5});
+    axisX.transfer({0.285,-0.29,0});
 
     // for (int k = 0; k < objectFaces.size(); ++k) { 
     //     Point p0 = facePointsList[k][0];
