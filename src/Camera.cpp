@@ -4,9 +4,6 @@
 #include <iostream>
 
 // Construtores
-// X -> Para dentro ou para fora da tela
-// y -> Para cima ou para baixo
-// Z -> Para direita ou para esquerda
 Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res, double aspectRatio, double fieldOfView) :
     location(location), 
     pointingAt(pointingAt), 
