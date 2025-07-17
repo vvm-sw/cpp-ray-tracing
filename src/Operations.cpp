@@ -57,7 +57,7 @@ Vector operator/(const Vector& v, double t) {
 }
 
 // Produto Escalar: Vetor * Vetor = Escalar
-double dot(const Vector &v1, const Vector &v2) {
+double dot(const Vector& v1, const Vector& v2) {
     return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 }
 
@@ -174,4 +174,9 @@ Matrix operator*(const Matrix& m1, const Matrix& m2) {
 // Retorna em radianos o ângulo entrado (ang)
 double rad(double ang) {
     return (ang * M_PI) / 180;
+}
+
+// Multiplicação componente a componente de um vetor. Vetor * Vetor = Vetor
+Vector operator*(const Vector& v1, const Vector& v2) {
+    return Vector(v1.getX() * v2.getX(), v1.getY() * v2.getY(), v1.getZ() * v2.getZ());
 }
