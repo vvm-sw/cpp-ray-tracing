@@ -12,7 +12,7 @@ private:
     Vector edgeV;    // Vetor do comprimento (Y)
     Vector normal;   // Normal da face
 public:
-    Rectangle(Point p0, double width, double length, Vector colour, Vector ka, Vector kd, Vector ks, double shininess);
+    Rectangle(Point p0, double width, double length, Vector ka, Vector kd, Vector ks, double shininess);
     
     // Print do vetor no formato <P0: ('value'), Width: ('value'), Length: ('value')>
     void print() const;
@@ -27,7 +27,6 @@ public:
     void setP0(Point newP0);
     void setWidth(double newWidth);
     void setLength(double newLength);
-    void setColour(Vector newColour);
     void setNormal(Vector newNormal);
 
     // Interseção de um vetor com o retangulo

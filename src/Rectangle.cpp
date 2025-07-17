@@ -3,8 +3,8 @@
 #include "Matrix.h"
 #include <iostream>
 
-Rectangle::Rectangle(Point p0_in, double width, double length, Vector col, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(colour, ka, kd, ks, shininess),    
+Rectangle::Rectangle(Point p0_in, double width, double length, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
     p0(p0_in)
 {
     // Largura vai no X
@@ -33,8 +33,6 @@ void Rectangle::setWidth(double newWidth) { edgeU = Vector(newWidth, 0, 0); }
 
 void Rectangle::setLength(double newLength) { edgeV = Vector(0, newLength, 0); }
 
-void Rectangle::setColour(Vector newColour) { colour = newColour; }
-
 void Rectangle::setNormal(Vector newNormal) { normal = newNormal; }
 
 HitRecord Rectangle::hit(const Ray& r) const {
@@ -59,7 +57,6 @@ HitRecord Rectangle::hit(const Ray& r) const {
 
     rec.t = t;
     rec.hit_point = p;
-    rec.material_color = colour;
     rec.ka = getka();
     rec.ks = getks();
     rec.kd = getkd();

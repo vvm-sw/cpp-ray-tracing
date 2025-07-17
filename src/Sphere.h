@@ -12,7 +12,7 @@ private:
     double radius;
 public:
     // Construtores
-    Sphere(Point center, double radius, Vector colour, Vector ka, Vector kd, Vector ks, double shininess);
+    Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess);
 
     // Print do vetor no formato (center, radius, <x, y, z>)
     void print() override;
@@ -24,7 +24,6 @@ public:
     // Setters
     void setCenter(Point newCenter);
     void setRadius(double newRadius);
-    void setColor(Vector newColor);
 
     // Interseção de um vetor com a esfera
     HitRecord hit(const Ray& r) const override;

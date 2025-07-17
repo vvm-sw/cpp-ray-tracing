@@ -5,8 +5,8 @@
 #include <vector>
 
 // Construtores
-Triangle::Triangle(Point a, Point b, Point c, Vector colour, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(colour, ka, kd, ks, shininess),
+Triangle::Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
     a(a),
     b(b),
     c(c)
@@ -36,13 +36,12 @@ const Point Triangle::getCentroid() const {
 void Triangle::setA(Point newA) { a = newA; }
 void Triangle::setB(Point newB) { b = newB; }
 void Triangle::setC(Point newC) { c = newC; }
-void Triangle::setColour(Vector newColour) { colour = newColour; }
 void Triangle::setNormal(Vector newNormal) { normal = newNormal; }
 
 // Interseção de um vetor com o triangulo
 HitRecord Triangle::hit(const Ray& r) const {
     // Plano da face do triângulo
-    Plane p = Plane(getA(), getNormal(), getColour(), getka(), getkd(), getks(), getshininess());
+    Plane p = Plane(getA(), getNormal(), getka(), getkd(), getks(), getshininess());
     HitRecord rec;
     
     // rec guarda as informações se r intersecta o plano p

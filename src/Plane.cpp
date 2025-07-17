@@ -2,8 +2,8 @@
 #include "Operations.h"
 #include "Ray.h"
 
-Plane::Plane(Point newPlanePoint, Vector newNormal, Vector newColor, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(newColor, ka, kd, ks, shininess),    
+Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
     planePoint(newPlanePoint),
     normal(newNormal)
     {}
@@ -15,7 +15,6 @@ const Vector& Plane::getNormal() const { return normal; }
 // Setters
 void Plane::setPlanePoint(Point& newPlanePoint) { planePoint = newPlanePoint ;}
 void Plane::setNormal(Vector& newNormal) { normal = newNormal; }
-void Plane::setColor(Vector& newColor) { colour = newColor; }
 
 HitRecord Plane::hit (const Ray& r) const {
     // Esta função analisa os vetores N normal e vetor D direção do raio
@@ -43,7 +42,6 @@ HitRecord Plane::hit (const Ray& r) const {
             // Raio está no plano
             rec.t = 0.000001;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.material_color = getColour();
             rec.normal = getNormal();
             rec.ka = getka();
             rec.ks = getks();
@@ -77,7 +75,6 @@ HitRecord Plane::hit (const Ray& r) const {
         } else {
             rec.t = t;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.material_color = getColour();
             rec.normal = getNormal();
             rec.ka = getka();
             rec.ks = getks();

@@ -86,9 +86,9 @@ bool operator!=(const Vector& a, const Vector& b) {
 }
 
 // Comparação entre dois HitRecord
+// ! Atualizar com novos membros
 bool operator==(const HitRecord& a, const HitRecord& b) {
     if (a.t != b.t) { return false; }
-    if (a.material_color != b.material_color) { return false; }
     if (a.normal != b.normal) { return false; }
     if (a.hit_point != b.hit_point) { return false; }
     return true;

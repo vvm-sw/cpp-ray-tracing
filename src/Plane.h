@@ -9,7 +9,7 @@ private:
     Vector normal;
 public:
     // Constructor
-    Plane(Point newPlanePoint, Vector newNormal, Vector newColor, Vector ka, Vector kd, Vector ks, double shininess);
+    Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess);
 
     // Getters
     const Point& getPlanePoint() const;
@@ -18,7 +18,6 @@ public:
     // Setters
     void setPlanePoint(Point& planePoint);
     void setNormal(Vector& normal);
-    void setColor(Vector& color);
 
     // Hit
     HitRecord hit(const Ray& ray) const override;

@@ -5,8 +5,8 @@
 #include <cmath>
 
 // Construtores
-Sphere::Sphere(Point center, double radius, Vector colour, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(colour, ka, kd, ks, shininess),
+Sphere::Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
     center(center),
     radius(radius)
     {}
@@ -14,7 +14,7 @@ Sphere::Sphere(Point center, double radius, Vector colour, Vector ka, Vector kd,
 // Print do vetor no formato (center, radius, <x, y, z>)
 void Sphere::print() {
     std::cout << "(" << center.getX() << ", " << center.getY() << ", " << center.getZ() << ")" 
-    << ", " << radius << ", " << "<" << colour.getX() << ", " << colour.getY() << ", " << colour.getZ() << ">" << std::endl;
+    << ", " << radius << std::endl;
 }
 
 // Getters
@@ -24,7 +24,6 @@ const double& Sphere::getRadius() const { return radius; }
 // Setters
 void Sphere::setCenter(Point newCenter) { center = newCenter; }
 void Sphere::setRadius(double newRadius) { radius = newRadius; }
-void Sphere::setColor(Vector newColor) { colour = newColor; }
 
 // Interseção de um vetor com a esfera
 HitRecord Sphere::hit(const Ray& r) const {
@@ -61,7 +60,6 @@ HitRecord Sphere::hit(const Ray& r) const {
         if (t1 > t_min) {
             rec.t = t1;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.material_color = getColour();
             rec.normal = rec.hit_point - getCenter();
             rec.ka = getka();
             rec.ks = getks();
@@ -80,7 +78,6 @@ HitRecord Sphere::hit(const Ray& r) const {
         if (tres > t_min) {
             rec.t = tres;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.material_color = getColour();
             rec.normal = rec.hit_point - getCenter();
             rec.ka = getka();
             rec.ks = getks();
