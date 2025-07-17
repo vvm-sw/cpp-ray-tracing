@@ -10,19 +10,16 @@ class Sphere : public Hittable {
 private:
     Point center;
     double radius;
-    Vector colour;
-
 public:
     // Construtores
-    Sphere(Point center, double radius, Vector colour);
+    Sphere(Point center, double radius, Vector colour, Vector ka, Vector kd, Vector ks, double shininess);
 
     // Print do vetor no formato (center, radius, <x, y, z>)
-    void print();
+    void print() override;
 
     // Getters
     const Point& getCenter() const;
     const double& getRadius() const;
-    const Vector& getColour() const override;
 
     // Setters
     void setCenter(Point newCenter);

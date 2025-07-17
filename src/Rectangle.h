@@ -11,10 +11,8 @@ private:
     Vector edgeU;    // Vetor da largura (X)
     Vector edgeV;    // Vetor do comprimento (Y)
     Vector normal;   // Normal da face
-    Vector colour;   // Cor
-
 public:
-    Rectangle(Point p0, double width, double length, Vector colour);
+    Rectangle(Point p0, double width, double length, Vector colour, Vector ka, Vector kd, Vector ks, double shininess);
     
     // Print do vetor no formato <P0: ('value'), Width: ('value'), Length: ('value')>
     void print() const;
@@ -23,7 +21,6 @@ public:
     const Point& getP0() const;
     const Vector& getWidth() const;
     const Vector& getLength() const;
-    const Vector& getColour() const override;
     const Vector& getNormal() const;
 
     // Setters

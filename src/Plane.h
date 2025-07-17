@@ -7,16 +7,13 @@ class Plane : public Hittable {
 private:
     Point planePoint;
     Vector normal;
-    Vector color;
-
 public:
     // Constructor
-    Plane(Point newPlanePoint, Vector newNormal, Vector newColor);
+    Plane(Point newPlanePoint, Vector newNormal, Vector newColor, Vector ka, Vector kd, Vector ks, double shininess);
 
     // Getters
     const Point& getPlanePoint() const;
     const Vector& getNormal() const;
-    const Vector& getColour() const override;
     
     // Setters
     void setPlanePoint(Point& planePoint);

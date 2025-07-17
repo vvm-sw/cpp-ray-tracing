@@ -5,7 +5,11 @@
 #include <cmath>
 
 // Construtores
-Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
+Sphere::Sphere(Point center, double radius, Vector colour, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(colour, ka, kd, ks, shininess),
+    center(center),
+    radius(radius)
+    {}
 
 // Print do vetor no formato (center, radius, <x, y, z>)
 void Sphere::print() {
@@ -16,7 +20,6 @@ void Sphere::print() {
 // Getters
 const Point& Sphere::getCenter() const { return center; }
 const double& Sphere::getRadius() const { return radius; }
-const Vector& Sphere::getColour() const { return colour; }
 
 // Setters
 void Sphere::setCenter(Point newCenter) { center = newCenter; }
@@ -60,6 +63,10 @@ HitRecord Sphere::hit(const Ray& r) const {
             rec.hit_point = r.origin() + (rec.t * r.direction());
             rec.material_color = getColour();
             rec.normal = rec.hit_point - getCenter();
+            rec.ka = getka();
+            rec.ks = getks();
+            rec.kd = getkd();
+            rec.shininess = getshininess();
         } else {
             return {};
         }
@@ -75,6 +82,10 @@ HitRecord Sphere::hit(const Ray& r) const {
             rec.hit_point = r.origin() + (rec.t * r.direction());
             rec.material_color = getColour();
             rec.normal = rec.hit_point - getCenter();
+            rec.ka = getka();
+            rec.ks = getks();
+            rec.kd = getkd();
+            rec.shininess = getshininess();
         } else {
             return {};
         }
