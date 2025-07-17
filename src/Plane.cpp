@@ -4,9 +4,10 @@
 
 Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess) :
     Hittable(ka, kd, ks, shininess),
-    planePoint(newPlanePoint),
-    normal(newNormal)
-    {}
+    planePoint(newPlanePoint)
+    {
+        normal = newNormal.normalized();
+    }
 
 // Getters
 const Point& Plane::getPlanePoint() const { return planePoint; }

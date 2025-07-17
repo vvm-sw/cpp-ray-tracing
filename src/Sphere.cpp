@@ -53,14 +53,14 @@ HitRecord Sphere::hit(const Ray& r) const {
     // Um pequeno epsilon (t_min) para evitar artefatos de precisão (z-fighting)
     // Epsilon é importante para evitar que objetos "encostando" na câmera ou um no outro
     // causem problemas de interseção.
-    double t_min = 0.01;
+    double t_min = 0.001;
     // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
         if (t1 > t_min) {
             rec.t = t1;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.normal = rec.hit_point - getCenter();
+            rec.normal = (rec.hit_point - getCenter()).normalized();
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();
@@ -78,7 +78,7 @@ HitRecord Sphere::hit(const Ray& r) const {
         if (tres > t_min) {
             rec.t = tres;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.normal = rec.hit_point - getCenter();
+            rec.normal = (rec.hit_point - getCenter()).normalized();
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();

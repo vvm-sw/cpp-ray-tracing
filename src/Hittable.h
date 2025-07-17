@@ -26,7 +26,7 @@ public:
     // double kr; // Coeficiente de reflexão
     // double kt; // Coeficiente de transmissão
 
-    Hittable(Vector ka, Vector kd, Vector ks, double shininess) {}
+    Hittable(Vector ka, Vector kd, Vector ks, double shininess) : ka(ka), kd(kd), ks(ks), shininess(shininess) {}
 
     // O 'virtual' permite que classes filhas reimplementem esta função.
     // O '= 0' a torna uma "função virtual pura", o que significa que
