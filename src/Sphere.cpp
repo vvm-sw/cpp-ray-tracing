@@ -5,23 +5,25 @@
 #include <cmath>
 
 // Construtores
-Sphere::Sphere(Point center, double radius, Vector colour) : center(center), radius(radius), colour(colour) {}
+Sphere::Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
+    center(center),
+    radius(radius)
+    {}
 
 // Print do vetor no formato (center, radius, <x, y, z>)
 void Sphere::print() {
     std::cout << "(" << center.getX() << ", " << center.getY() << ", " << center.getZ() << ")" 
-    << ", " << radius << ", " << "<" << colour.getX() << ", " << colour.getY() << ", " << colour.getZ() << ">" << std::endl;
+    << ", " << radius << std::endl;
 }
 
 // Getters
 const Point& Sphere::getCenter() const { return center; }
 const double& Sphere::getRadius() const { return radius; }
-const Vector& Sphere::getColour() const { return colour; }
 
 // Setters
 void Sphere::setCenter(Point newCenter) { center = newCenter; }
 void Sphere::setRadius(double newRadius) { radius = newRadius; }
-void Sphere::setColor(Vector newColor) { colour = newColor; }
 
 // Interseção de um vetor com a esfera
 HitRecord Sphere::hit(const Ray& r) const {
@@ -48,24 +50,49 @@ HitRecord Sphere::hit(const Ray& r) const {
     HitRecord rec;
     // t1 e t2 são os valores de t que satisfazem a(s) interseção(ões)
     double t1;
+    // Um pequeno epsilon (t_min) para evitar artefatos de precisão (z-fighting)
+    // Epsilon é importante para evitar que objetos "encostando" na câmera ou um no outro
+    // causem problemas de interseção.
+    double t_min = 0.001;
     // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
-        rec.t = t1;
-        rec.hit_point = r.origin() + (rec.t * r.direction());
-        rec.material_color = getColour();
-        rec.normal = rec.hit_point - getCenter();
+        if (t1 > t_min) {
+            rec.t = t1;
+            rec.hit_point = r.origin() + (rec.t * r.direction());
+            rec.normal = (rec.hit_point - getCenter()).normalized();
+            rec.ka = getka();
+            rec.ks = getks();
+            rec.kd = getkd();
+            rec.shininess = getshininess();
+        } else {
+            return {};
+        }
     } else {
         // Se o discriminante for > 0 então temos duas raízes, ou seja há interseção
         double root = sqrt(discriminant);
         double t2 = t1 = root;
         t1 = (-b + t1) / (2 * a);
         t2 = (-b - t2) / (2 * a);
-        rec.t = t1 < t2 ? t1 : t2;
-        rec.hit_point = r.origin() + (rec.t * r.direction());
-        rec.material_color = getColour();
-        rec.normal = rec.hit_point - getCenter();
+        double tres = t1 < t2 ? t1 : t2;
+        if (tres > t_min) {
+            rec.t = tres;
+            rec.hit_point = r.origin() + (rec.t * r.direction());
+            rec.normal = (rec.hit_point - getCenter()).normalized();
+            rec.ka = getka();
+            rec.ks = getks();
+            rec.kd = getkd();
+            rec.shininess = getshininess();
+        } else {
+            return {};
+        }
     }
     
     return rec;
 }
+
+void Sphere::rotateAll(double angle) {}
+void Sphere::rotateX(double angle) {}
+void Sphere::rotateY(double angle) {}
+void Sphere::rotateZ(double angle) {}
+void Sphere::transfer(Vector distances) {}

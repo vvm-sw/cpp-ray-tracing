@@ -10,25 +10,27 @@ class Sphere : public Hittable {
 private:
     Point center;
     double radius;
-    Vector colour;
-
 public:
     // Construtores
-    Sphere(Point center, double radius, Vector colour);
+    Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess);
 
     // Print do vetor no formato (center, radius, <x, y, z>)
-    void print();
+    void print() override;
 
     // Getters
     const Point& getCenter() const;
     const double& getRadius() const;
-    const Vector& getColour() const override;
 
     // Setters
     void setCenter(Point newCenter);
     void setRadius(double newRadius);
-    void setColor(Vector newColor);
 
     // Interseção de um vetor com a esfera
     HitRecord hit(const Ray& r) const override;
+
+    void rotateAll(double angle) override;
+    void rotateX(double angle) override;
+    void rotateY(double angle) override;
+    void rotateZ(double angle) override;
+    void transfer(Vector distances) override;
 };

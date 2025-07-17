@@ -2,17 +2,20 @@
 #include "Operations.h"
 #include "Ray.h"
 
-Plane::Plane(Point newPlanePoint, Vector newNormal, Vector newColor) : planePoint(newPlanePoint), normal(newNormal), color(newColor) {}
+Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
+    planePoint(newPlanePoint)
+    {
+        normal = newNormal.normalized();
+    }
 
 // Getters
 const Point& Plane::getPlanePoint() const { return planePoint; }
 const Vector& Plane::getNormal() const { return normal; }
-const Vector& Plane::getColour() const { return color; }
 
 // Setters
 void Plane::setPlanePoint(Point& newPlanePoint) { planePoint = newPlanePoint ;}
 void Plane::setNormal(Vector& newNormal) { normal = newNormal; }
-void Plane::setColor(Vector& newColor) { color = newColor; }
 
 HitRecord Plane::hit (const Ray& r) const {
     // Esta função analisa os vetores N normal e vetor D direção do raio
@@ -38,13 +41,16 @@ HitRecord Plane::hit (const Ray& r) const {
     if (dDotN == 0) {
         if (qpDotN == 0) {
             // Raio está no plano
-            rec.t = 0,000001;
+            rec.t = 0.000001;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.material_color = getColour();
             rec.normal = getNormal();
+            rec.ka = getka();
+            rec.ks = getks();
+            rec.kd = getkd();
+            rec.shininess = getshininess();
         } else {
             // Raio não intersecta o plano
-            rec = HitRecord{};
+            rec = {};
         }
     } else {
         // Raio intersecta o plano mas temos que verificar o t
@@ -66,14 +72,23 @@ HitRecord Plane::hit (const Ray& r) const {
         t = (-dot(r.origin()-Point(0, 0, 0), getNormal()) + dot(getPlanePoint()-Point(0, 0, 0), getNormal())) / dDotN;
 
         if (t <= 0) {
-            rec = HitRecord{};
+            rec = {};
         } else {
             rec.t = t;
             rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.material_color = getColour();
             rec.normal = getNormal();
+            rec.ka = getka();
+            rec.ks = getks();
+            rec.kd = getkd();
+            rec.shininess = getshininess();
         }
     }
     
     return rec;
 }
+
+void Plane::rotateAll(double angle) {}
+void Plane::rotateX(double angle) {}
+void Plane::rotateY(double angle) {}
+void Plane::rotateZ(double angle) {}
+void Plane::transfer(Vector distances) {}

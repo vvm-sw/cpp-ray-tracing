@@ -1,4 +1,5 @@
 #include "Operations.h"
+#include <iostream>
 
 // Adição: Ponto + Vetor = Ponto
 Point operator+(const Point& p, const Vector& v) {
@@ -56,7 +57,7 @@ Vector operator/(const Vector& v, double t) {
 }
 
 // Produto Escalar: Vetor * Vetor = Escalar
-double dot(const Vector &v1, const Vector &v2) {
+double dot(const Vector& v1, const Vector& v2) {
     return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 }
 
@@ -85,9 +86,9 @@ bool operator!=(const Vector& a, const Vector& b) {
 }
 
 // Comparação entre dois HitRecord
+// ! Atualizar com novos membros
 bool operator==(const HitRecord& a, const HitRecord& b) {
     if (a.t != b.t) { return false; }
-    if (a.material_color != b.material_color) { return false; }
     if (a.normal != b.normal) { return false; }
     if (a.hit_point != b.hit_point) { return false; }
     return true;
@@ -144,4 +145,38 @@ Point operator*(const Matrix& m, const Point& p) {
 // Ponto * Matriz = Ponto
 Point operator*(const Point& p, const Matrix& m) {
     return m * p;
+}
+
+// Matriz * Matriz = Matriz
+Matrix operator*(const Matrix& m1, const Matrix& m2) {
+    if (m1.width != m2.height) {
+        std::cerr << "ERROR: As matrizes não podem ser multiplicadas. "
+                  << "Número de colunas da primeira (" << m1.width << ") "
+                  << "diferente do número de linhas da segunda (" << m2.height << ")."
+                  << std::endl;
+        return Matrix(0, 0);
+    }
+
+    Matrix result(m1.height, m2.width);
+
+    for (int i = 0; i < m1.height; ++i) { // Linhas da matriz resultante (m1)
+        for (int j = 0; j < m2.width; ++j) { // Colunas da matriz resultante (m2)
+            for (int k = 0; k < m1.width; ++k) { // Colunas de m1 (linhas de m2)
+                result.matrixArray[i][j] += m1.matrixArray[i][k] * m2.matrixArray[k][j];
+            }
+        }
+    }
+    result.height = m1.height;
+    result.width = m2.width;
+    return result;
+}
+
+// Retorna em radianos o ângulo entrado (ang)
+double rad(double ang) {
+    return (ang * M_PI) / 180;
+}
+
+// Multiplicação componente a componente de um vetor. Vetor * Vetor = Vetor
+Vector operator*(const Vector& v1, const Vector& v2) {
+    return Vector(v1.getX() * v2.getX(), v1.getY() * v2.getY(), v1.getZ() * v2.getZ());
 }

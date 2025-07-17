@@ -1,17 +1,63 @@
 #include "Camera.h"
 #include "Operations.h"
 #include <cmath>
+#include <iostream>
 
 // Construtores
-Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res, double fieldOfView) :
-    location(location), pointingAt(pointingAt), worldUp(worldUp), distance(distance), h_res(h_res), v_res(v_res), fieldOfView(fieldOfView), U(0, 0, 0), V(0, 0, 0), W(0, 0, 0) {
-    calculateBasis();
-    aspectRatio = h_res/v_res;
-    double theta = fieldOfView * M_PI / 180; // Para radianos
+Camera::Camera(const Point& location, const Point& pointingAt, const Vector& worldUp, double distance, unsigned int h_res, unsigned int v_res, double aspectRatio, double fieldOfView) :
+    location(location), 
+    pointingAt(pointingAt), 
+    worldUp(worldUp), 
+    distance(distance), 
+    h_res(h_res), 
+    v_res(v_res), 
+    aspectRatio(aspectRatio),
+    fieldOfView(fieldOfView), 
+    U(0, 0, 0), 
+    V(0, 0, 0), 
+    W(0, 0, 0) {
+    
+    // Define a proporção padrão se não for fornecida (ou for inválida)
+    double effectiveAspectRatio = (this->aspectRatio > 0) ? this->aspectRatio : (16.0 / 9.0); // 16:9 como padrão
+
+    // Caso 1: FOV é zero
+    if (this->fieldOfView == 0) {
+        if (this->h_res == 0 || this->v_res == 0) {
+            this->h_res = 960; // Resolução horizontal padrão
+            this->v_res = static_cast<unsigned int>(this->h_res / effectiveAspectRatio);
+            this->fieldOfView = 60.0; // FOV vertical padrão em graus
+        } else {
+            // FOV é zero, mas h_res e v_res são válidos. Calcular FOV.
+            // Para calcular o FOV vertical a partir da resolução e distância,
+            // precisamos de um 'tamanho físico' para a tela de visualização.
+            // Assumimos um halfHeight padrão de 1.0 para este cálculo de FOV.
+            double assumedHalfHeight = 1.0; 
+            this->fieldOfView = (2 * atan(assumedHalfHeight / this->distance)) * 180 / M_PI; // FOV vertical em graus
+        }
+    } 
+    // Caso 2: FOV não é zero, mas h_res ou v_res são zero
+    else {
+        if (this->h_res == 0 && this->v_res == 0) {
+            this->h_res = 960; // Resolução horizontal padrão
+            this->v_res = static_cast<unsigned int>(this->h_res / effectiveAspectRatio);
+        } else if (this->h_res == 0) {
+            this->h_res = static_cast<unsigned int>(this->v_res * effectiveAspectRatio);
+        } else if (this->v_res == 0) {
+            this->v_res = static_cast<unsigned int>(this->h_res / effectiveAspectRatio);
+        }
+    }
+
+    // Garante que a proporção da câmera seja baseada nas resoluções finais
+    this->aspectRatio = static_cast<double>(this->h_res) / this->v_res; 
+
+    this->calculateBasis();
+    
+    double theta = this->fieldOfView * M_PI / 180; // FOV vertical para radianos
     double halfHeight = tan(theta/2);
-    double halfWidth = aspectRatio * halfHeight;
-    Point corner = location - (distance * W) - (halfWidth * U) - (halfHeight * V);
-    createScreen(corner, 2*halfWidth*U, 2*halfHeight*V);
+    double halfWidth = this->aspectRatio * halfHeight;
+    
+    Point corner = this->location - (this->distance * this->W) - (halfWidth * this->U) - (halfHeight * this->V);
+    this->createScreen(corner, 2*halfWidth*this->U, 2*halfHeight*this->V);
 }
 
 // Getters
@@ -54,11 +100,11 @@ void Camera::calculateBasis() {
     // Calcula o vetor W (oposto à direção da mira), conforme a especificação
     W = (location - pointingAt).normalized();
 
-    // Calcula o vetor U (eixo x da câmera, "direita")
+    // Calcula o vetor U (eixo z da câmera, direção horizontal)
     // U é o produto vetorial do "para-cima" do mundo com W
     U = cross(worldUp, W).normalized();
 
-    // Calcula o vetor V (eixo y da câmera, "para-cima" real)
+    // Calcula o vetor V (eixo y da câmera, direção vertical)
     // V é o produto vetorial de W e U para garantir a ortogonalidade
     V = cross(W, U); // Não precisa normalizar, pois U e W já são ortonormais
 }

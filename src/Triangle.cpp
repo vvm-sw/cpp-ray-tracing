@@ -5,8 +5,13 @@
 #include <vector>
 
 // Construtores
-Triangle::Triangle(Point a, Point b, Point c, Vector colour) : a(a), b(b), c(c), colour(colour) {
-    setNormal(cross(a-b, c-b));
+Triangle::Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
+    a(a),
+    b(b),
+    c(c)
+{
+    setNormal(cross(a-b, c-b).normalized());
 }
 
 // Print do triangulo no formato <(x1, y1, z1), (x2, y2, z2), (x3, y3, 3z)>
@@ -15,27 +20,28 @@ void Triangle::print() {
     "(" << a.getX() << ", " << a.getY() << ", " << a.getZ() << ")" << 
     "(" << b.getX() << ", " << b.getY() << ", " << b.getZ() << ")" << 
     "(" << c.getX() << ", " << c.getY() << ", " << c.getZ() << ")" << 
-    std::endl;
+    ">" << std::endl;
 }
 
 // Getters
 const Point& Triangle::getA() const { return a; }
 const Point& Triangle::getB() const { return b; }
 const Point& Triangle::getC() const { return c; }
-const Vector& Triangle::getColour() const { return colour; }
 const Vector& Triangle::getNormal() const { return normal; }
+const Point Triangle::getCentroid() const {
+    return getA() + (1.0/3.0 * (getB()-getA())) + (1.0/3.0 * (getC()-getA()));
+}
 
 // Setters
 void Triangle::setA(Point newA) { a = newA; }
 void Triangle::setB(Point newB) { b = newB; }
 void Triangle::setC(Point newC) { c = newC; }
-void Triangle::setColour(Vector newColour) { colour = newColour; }
 void Triangle::setNormal(Vector newNormal) { normal = newNormal; }
 
 // Interseção de um vetor com o triangulo
 HitRecord Triangle::hit(const Ray& r) const {
     // Plano da face do triângulo
-    Plane p = Plane(getA(), getNormal(), getColour());
+    Plane p = Plane(getA(), getNormal(), getka(), getkd(), getks(), getshininess());
     HitRecord rec;
     
     // rec guarda as informações se r intersecta o plano p
@@ -61,7 +67,7 @@ bool Triangle::has(Point p) const {
     // P - A = (u * (B - A)) + (v * (C - A))
     // PA = (u * (BA)) + (v * (CA))
     // 
-    // Se x = y sendo x e y vetore, então dot(x, z) = dot(y, z)
+    // Se x = y sendo x e y vetores, então dot(x, z) = dot(y, z)
     // para qualquer vetor z, logo, temos
     // dot(PA, BA) = dot((u * BA), BA) + dot((v * CA), BA) e
     // dot(PA, CA) = dot((u * BA), CA) + dot((v * CA), CA)
@@ -108,4 +114,96 @@ bool Triangle::has(Point p) const {
     } else {
         return false;
     }
+}
+
+void Triangle::rotateAll(double angle) {
+    // pivot é o centróide do triângulo, isto é, ponto referência para fazermos a rotação
+    Point pivot = getCentroid();
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotation(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    setA(getA() * result);
+    setB(getB() * result);
+    setC(getC() * result);
+
+    setNormal(cross(getA() - getB(), getC() - getB()).normalized());
+}
+
+void Triangle::rotateX(double angle) {
+    // pivot é o centróide do triângulo, isto é, ponto referência para fazermos a rotação
+    Point pivot = getCentroid();
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotationX(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    setA(getA() * result);
+    setB(getB() * result);
+    setC(getC() * result);
+
+    setNormal(cross(getA() - getB(), getC() - getB()).normalized());
+}
+
+void Triangle::rotateY(double angle) {
+    // pivot é o centróide do triângulo, isto é, ponto referência para fazermos a rotação
+    Point pivot = getCentroid();
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotationY(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    setA(getA() * result);
+    setB(getB() * result);
+    setC(getC() * result);
+
+    setNormal(cross(getA() - getB(), getC() - getB()).normalized());
+}
+void Triangle::rotateZ(double angle) {
+        // pivot é o centróide do triângulo, isto é, ponto referência para fazermos a rotação
+    Point pivot = getCentroid();
+    Matrix translationOriginMatrix(4);
+    Matrix rotationMatrix(4);
+    Matrix translationBackMatrix(4);
+    Matrix result(4);
+
+    translationOriginMatrix.buildTranslation({-pivot.getX(), -pivot.getY(), -pivot.getZ()});
+    rotationMatrix.buildRotationZ(angle);
+    translationBackMatrix.buildTranslation({pivot.getX(), pivot.getY(), pivot.getZ()});
+
+    // Compomos as três matrizes em apenas uma (result)
+    result = translationBackMatrix * (rotationMatrix * translationOriginMatrix);
+    setA(getA() * result);
+    setB(getB() * result);
+    setC(getC() * result);
+
+    setNormal(cross(getA() - getB(), getC() - getB()).normalized());
+}
+
+void Triangle::transfer(Vector distances){
+    Matrix m(4);
+    m.buildTranslation(distances);
+    
+    setA(m*getA());
+    setB(m*getB());
+    setC(m*getC());
 }
