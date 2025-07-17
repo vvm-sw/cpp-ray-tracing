@@ -5,7 +5,12 @@
 #include <vector>
 
 // Construtores
-Triangle::Triangle(Point a, Point b, Point c, Vector colour) : a(a), b(b), c(c), colour(colour) {
+Triangle::Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, double shininess) :
+    Hittable(ka, kd, ks, shininess),
+    a(a),
+    b(b),
+    c(c)
+{
     setNormal(cross(a-b, c-b).normalized());
 }
 
@@ -22,7 +27,6 @@ void Triangle::print() {
 const Point& Triangle::getA() const { return a; }
 const Point& Triangle::getB() const { return b; }
 const Point& Triangle::getC() const { return c; }
-const Vector& Triangle::getColour() const { return colour; }
 const Vector& Triangle::getNormal() const { return normal; }
 const Point Triangle::getCentroid() const {
     return getA() + (1.0/3.0 * (getB()-getA())) + (1.0/3.0 * (getC()-getA()));
@@ -32,13 +36,12 @@ const Point Triangle::getCentroid() const {
 void Triangle::setA(Point newA) { a = newA; }
 void Triangle::setB(Point newB) { b = newB; }
 void Triangle::setC(Point newC) { c = newC; }
-void Triangle::setColour(Vector newColour) { colour = newColour; }
 void Triangle::setNormal(Vector newNormal) { normal = newNormal; }
 
 // Interseção de um vetor com o triangulo
 HitRecord Triangle::hit(const Ray& r) const {
     // Plano da face do triângulo
-    Plane p = Plane(getA(), getNormal(), getColour());
+    Plane p = Plane(getA(), getNormal(), getka(), getkd(), getks(), getshininess());
     HitRecord rec;
     
     // rec guarda as informações se r intersecta o plano p

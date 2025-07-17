@@ -32,7 +32,7 @@ Vector cross(const Vector& v1, const Vector& v2);
 Vector operator/(const Vector& v, double t);
 
 // Produto Escalar: Vetor * Vetor = Escalar
-double dot(const Vector &v1, const Vector &v2);
+double dot(const Vector& v1, const Vector& v2);
 
 // Comparação entre dois vetores
 bool operator==(const Vector& a, const Vector& b);
@@ -70,3 +70,6 @@ Matrix operator*(const Matrix& m1, const Matrix& m2);
 
 // Retorna em radianos o ângulo entrado (ang)
 double rad(double ang);
+
+// Multiplicação componente a componente de um vetor
+Vector operator*(const Vector& v1, const Vector& v2);

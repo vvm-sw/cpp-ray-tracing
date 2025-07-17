@@ -7,21 +7,17 @@ class Plane : public Hittable {
 private:
     Point planePoint;
     Vector normal;
-    Vector color;
-
 public:
     // Constructor
-    Plane(Point newPlanePoint, Vector newNormal, Vector newColor);
+    Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess);
 
     // Getters
     const Point& getPlanePoint() const;
     const Vector& getNormal() const;
-    const Vector& getColour() const override;
     
     // Setters
     void setPlanePoint(Point& planePoint);
     void setNormal(Vector& normal);
-    void setColor(Vector& color);
 
     // Hit
     HitRecord hit(const Ray& ray) const override;

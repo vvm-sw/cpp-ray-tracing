@@ -57,7 +57,7 @@ Vector operator/(const Vector& v, double t) {
 }
 
 // Produto Escalar: Vetor * Vetor = Escalar
-double dot(const Vector &v1, const Vector &v2) {
+double dot(const Vector& v1, const Vector& v2) {
     return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 }
 
@@ -86,9 +86,9 @@ bool operator!=(const Vector& a, const Vector& b) {
 }
 
 // Comparação entre dois HitRecord
+// ! Atualizar com novos membros
 bool operator==(const HitRecord& a, const HitRecord& b) {
     if (a.t != b.t) { return false; }
-    if (a.material_color != b.material_color) { return false; }
     if (a.normal != b.normal) { return false; }
     if (a.hit_point != b.hit_point) { return false; }
     return true;
@@ -174,4 +174,9 @@ Matrix operator*(const Matrix& m1, const Matrix& m2) {
 // Retorna em radianos o ângulo entrado (ang)
 double rad(double ang) {
     return (ang * M_PI) / 180;
+}
+
+// Multiplicação componente a componente de um vetor. Vetor * Vetor = Vetor
+Vector operator*(const Vector& v1, const Vector& v2) {
+    return Vector(v1.getX() * v2.getX(), v1.getY() * v2.getY(), v1.getZ() * v2.getZ());
 }
