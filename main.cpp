@@ -45,9 +45,10 @@ Vector simpleColour(const vector<Hittable*>& l,  const Ray& r) {
 }
 
 Vector phongColour(const vector<Hittable*>& objList, const vector<Light::PontualLight*>& pontualLights, const Light::EnvLight& ambientLight, const Point& cameraLocation, const Ray& r, int recursionDepth) {
-    if (recursionDepth == 2) {
+    if (recursionDepth == 4) {
         return Vector(0,0,0); 
     }
+
     // t_min é crucial para raios de sombra e evitar z-fighting.
     const double t_min = 0.001; 
 
@@ -127,13 +128,40 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
             specular_contrib = lightColor * specular_contrib;
             finalColor = finalColor + specular_contrib;
 
-            // Reflexão;
-            // Reflexão fórmula monitoria
+            // Reflexão:
             recursionDepth++;
             
-            Vector reflectionDirection(2*N*(dot(N, V)) - V);
-            Vector reflection_contrib = phongColour(objList, pontualLights, ambientLight, closest.hit_point, Ray(closest.hit_point, reflectionDirection.normalized()), recursionDepth) * closest.kr;
+            // Reflexão fórmula monitoria:
+            Vector reflectionDirection = (2 * N * (dot(N, V)) - V).normalized();
+            Vector reflection_contrib = phongColour(objList, pontualLights, ambientLight, closest.hit_point, Ray(closest.hit_point, reflectionDirection), recursionDepth) * closest.kr;
             finalColor = finalColor + reflection_contrib;
+
+            // Refração:
+
+            // I é a direção do raio incidente. Como V aponta do hit_point para a câmera,
+            // o raio incidente vem da câmera para o hit_point, então I = -V.
+            // I = Exterior -> OBJ
+            // N = OBJ -> Exterior
+            Vector I = -1 * V;
+            double cosTeta = dot(N, I);
+            // cosTeta precisa ser negativo para que o raio de incidencia
+            // esteja estrando no objeto, caso contrário, o raio está saindo
+            // de dentro do objeto
+            if (cosTeta < 0) {
+                double Nzao = 1/closest.kt; // Aqui colocariamos "/kt do obj origem"
+                // Primeira relação fundamental da trigonometria, também conhecida como identidade pitagórica trigonométrica:
+                // sen² + cos² = 1
+                double senTeta = sqrt(1 - cosTeta*cosTeta);
+                // sen(Teta)/sen(TetaT) = kt_in/kt_out = Nzao
+                double senTetaT = senTeta / Nzao;
+                double cosTetaT = sqrt(1 - senTetaT*senTetaT);
+                cout << "SenTeta = " << senTeta << " CosTeta = " << cosTeta << endl;
+                cout << "SenTetaT = " << senTetaT << " CosTetaT = " << cosTetaT << endl;
+                // T = 1/N * V - (cos(TetaT) - ((1/N ) * cos(Teta)) * N)
+                Vector T = ((1 / Nzao) * V - (cosTetaT - ((1/Nzao) * cosTeta)) * N).normalized();
+                Vector refraction_contrib = phongColour(objList, pontualLights, ambientLight, closest.hit_point, Ray(closest.hit_point, T), recursionDepth);
+                finalColor = finalColor + refraction_contrib;
+            }
         }
     }
     
@@ -189,11 +217,12 @@ int main() {
     Light::PontualLight l1 = Light::PontualLight({0, 0.5, -2}, {1,1,1}); // Luz branca forte acima
     Light::PontualLight l2 = Light::PontualLight({-1.5, -0.5, -1.7}, {0.7, 0.7, 0.7}); // Outra luz, mais fraca
     Light::PontualLight l3 = Light::PontualLight({2, 0.5, -2.3}, {1,1,1});
+    Light::PontualLight l4 = Light::PontualLight({0, 0, 10}, {0.5,0.5,0.5});
     // Light::PontualLight l4 = Light::PontualLight({0, 0, -2}, {1,1,1});
-    pontualLights.push_back(&l1);
-    pontualLights.push_back(&l2);
+    // pontualLights.push_back(&l1);
+    // pontualLights.push_back(&l2);
     // pontualLights.push_back(&l3);
-    // pontualLights.push_back(&l4);
+    pontualLights.push_back(&l4);
 
     // Fim da lista de luzes
     // ----------------------------------------------------
@@ -201,42 +230,46 @@ int main() {
     // ----------------------------------------------------
     // Inicio da lista de objetos
     // Triângulo (AZUL) - um pouco brilhante
-    Triangle t = Triangle({-0.6, -0.4, -3}, {0.4, -0.4, -3}, {0.4, 0.4, -3}, BLUE, BLUE, {0, 0, 0}, 16);
+    // Triangle t = Triangle({-0.6, -0.4, -3}, {0.4, -0.4, -3}, {0.4, 0.4, -3}, BLUE, BLUE, {0, 0, 0}, 16);
 
     // Esfera (VERMELHA)
-    Sphere s = Sphere({0,0,-3}, 0.3, RED/1.5, RED, WHITE, 16);
-    Sphere s1 = Sphere({-2,0.5,-3}, 0.5, PURPLE, LIGHT_GRAY, BLACK, 8);
-    Sphere s2 = Sphere({2,0.5,-3}, 0.5, BLACK, DARK_GRAY, WHITE, 100);
-    Sphere sl1 = Sphere(l1.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
-    Sphere sl2 = Sphere(l2.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
-    Sphere sl3 = Sphere(l3.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
+    Sphere s = Sphere({0,0,-3}, 0.3, RED/1.5, RED, WHITE, 16, 0, 0);
+    // Sphere s1 = Sphere({-2,0.5,-3}, 0.5, PURPLE, LIGHT_GRAY, BLACK, 8, 0, 0);
+    Sphere s2 = Sphere({2,0.5,-3}, 0.5, BLACK, DARK_GRAY, WHITE, 100, 0.1, 0);
+    Sphere s3 = Sphere({0,1,-2}, 0.2, BLACK, DARK_GRAY, WHITE, 100, 0.1, 0);
+    Sphere s4 = Sphere({0,0,-1}, 0.2, BLACK, DARK_GRAY, PURPLE, 1, 0, 0.2);
+    // Sphere sl1 = Sphere(l1.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
+    // Sphere sl2 = Sphere(l2.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
+    // Sphere sl3 = Sphere(l3.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
 
     // Retângulo Eixo X (VERMELHO)
-    Rectangle axisX = Rectangle({-1.7,-1,-2}, 0.03, 0.6, {0.7, 0, 0}, RED, {0, 0, 0}, 32);
+    // Rectangle axisX = Rectangle({-1.7,-1,-2}, 0.03, 0.6, {0.7, 0, 0}, RED, {0, 0, 0}, 32);
 
     // Retângulo Eixo Y (VERDE)
-    Rectangle axisY = Rectangle({-1.7,-1,-2}, 0.03, 0.6, {0, 0.7, 0}, GREEN, {0, 0, 0}, 32);
+    // Rectangle axisY = Rectangle({-1.7,-1,-2}, 0.03, 0.6, {0, 0.7, 0}, GREEN, {0, 0, 0}, 32);
 
     // Retângulo Eixo Z (AZUL)
-    Rectangle axisZ = Rectangle({-1.7,-1,-2}, 0.03, 0.6, {0, 0, 0.7}, BLUE, {0, 0, 0}, 32);
+    // Rectangle axisZ = Rectangle({-1.7,-1,-2}, 0.03, 0.6, {0, 0, 0.7}, BLUE, {0, 0, 0}, 32);
 
-    objList.push_back(&t);
+    // objList.push_back(&t);
     objList.push_back(&s);
-    objList.push_back(&s1);
+    // objList.push_back(&s1);
     objList.push_back(&s2);
-    objList.push_back(&sl1);
-    objList.push_back(&sl2);
+    objList.push_back(&s3);
+    objList.push_back(&s4);
+    // objList.push_back(&sl1);
+    // objList.push_back(&sl2);
     // objList.push_back(&sl3);
-    objList.push_back(&axisX);
-    objList.push_back(&axisZ);
-    objList.push_back(&axisY);
-    t.rotateZ(rad(45));
-    t.rotateX(rad(45));
-    t.rotateY(rad(45));
-    axisZ.rotateX(rad(90));
-    axisX.rotateZ(rad(90));
-    axisZ.transfer({-0.178,-0.39,-0.5});
-    axisX.transfer({0.285,-0.29,0});
+    // objList.push_back(&axisX);
+    // objList.push_back(&axisZ);
+    // objList.push_back(&axisY);
+    // t.rotateZ(rad(45));
+    // t.rotateX(rad(45));
+    // t.rotateY(rad(45));
+    // axisZ.rotateX(rad(90));
+    // axisX.rotateZ(rad(90));
+    // axisZ.transfer({-0.178,-0.39,-0.5});
+    // axisX.transfer({0.285,-0.29,0});
 
     // for (int k = 0; k < objectFaces.size(); ++k) { 
     //     Point p0 = facePointsList[k][0];

@@ -12,7 +12,7 @@ private:
     Vector edgeV;    // Vetor do comprimento (Y)
     Vector normal;   // Normal da face
 public:
-    Rectangle(Point p0, double width, double length, Vector ka, Vector kd, Vector ks, double shininess);
+    Rectangle(Point p0, double width, double length, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt);
     
     // Print do vetor no formato <P0: ('value'), Width: ('value'), Length: ('value')>
     void print() const;

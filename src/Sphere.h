@@ -12,7 +12,7 @@ private:
     double radius;
 public:
     // Construtores
-    Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess);
+    Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt);
 
     // Print do vetor no formato (center, radius, <x, y, z>)
     void print() override;

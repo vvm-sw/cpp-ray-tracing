@@ -23,10 +23,10 @@ public:
     Vector kd; // Coeficiente difuso
     Vector ks; // Coeficiente especular
     double shininess; // Expoente n
-    // double kr; // Coeficiente de reflexão
-    // double kt; // Coeficiente de transmissão
+    double kr; // Coeficiente de reflexão
+    double kt; // Coeficiente de transmissão
 
-    Hittable(Vector ka, Vector kd, Vector ks, double shininess) : ka(ka), kd(kd), ks(ks), shininess(shininess) {}
+    Hittable(Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) : ka(ka), kd(kd), ks(ks), shininess(shininess), kr(kr), kt(kt) {}
 
     // O 'virtual' permite que classes filhas reimplementem esta função.
     // O '= 0' a torna uma "função virtual pura", o que significa que
@@ -44,6 +44,8 @@ public:
     virtual const Vector& getkd() const { return kd; }
     virtual const Vector& getks() const { return ks; }
     virtual const double& getshininess() const { return shininess; }
+    virtual const double& getkr() const { return kr; }
+    virtual const double& getkt() const { return kt; }
 
     // Destrutor virtual é importante para classes base polimórficas
     virtual ~Hittable() = default;
