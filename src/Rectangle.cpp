@@ -3,8 +3,8 @@
 #include "Matrix.h"
 #include <iostream>
 
-Rectangle::Rectangle(Point p0_in, double width, double length, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(ka, kd, ks, shininess),
+Rectangle::Rectangle(Point p0_in, double width, double length, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) :
+    Hittable(ka, kd, ks, shininess, kr, kt),
     p0(p0_in)
 {
     // Largura vai no X
@@ -60,6 +60,8 @@ HitRecord Rectangle::hit(const Ray& r) const {
     rec.ka = getka();
     rec.ks = getks();
     rec.kd = getkd();
+    rec.kr = getkr();
+    rec.kt = getkt();
     rec.shininess = getshininess();
 
     // Normal sempre apontando para fora

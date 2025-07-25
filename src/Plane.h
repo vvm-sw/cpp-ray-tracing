@@ -9,7 +9,7 @@ private:
     Vector normal;
 public:
     // Constructor
-    Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess);
+    Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt);
 
     // Getters
     const Point& getPlanePoint() const;

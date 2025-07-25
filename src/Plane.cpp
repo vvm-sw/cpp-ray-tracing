@@ -2,8 +2,8 @@
 #include "Operations.h"
 #include "Ray.h"
 
-Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(ka, kd, ks, shininess),
+Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) :
+    Hittable(ka, kd, ks, shininess, kr, kt),
     planePoint(newPlanePoint)
     {
         normal = newNormal.normalized();
@@ -80,6 +80,8 @@ HitRecord Plane::hit (const Ray& r) const {
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();
+            rec.kr = getkr();
+            rec.kt = getkt();
             rec.shininess = getshininess();
         }
     }

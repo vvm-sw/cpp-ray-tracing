@@ -5,8 +5,8 @@
 #include <cmath>
 
 // Construtores
-Sphere::Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(ka, kd, ks, shininess),
+Sphere::Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) :
+    Hittable(ka, kd, ks, shininess, kr, kt),
     center(center),
     radius(radius)
     {}
@@ -82,6 +82,8 @@ HitRecord Sphere::hit(const Ray& r) const {
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();
+            rec.kr = getkr();
+            rec.kt = getkt();
             rec.shininess = getshininess();
         } else {
             return {};

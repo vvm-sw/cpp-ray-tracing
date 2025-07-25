@@ -5,8 +5,8 @@
 #include <vector>
 
 // Construtores
-Triangle::Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(ka, kd, ks, shininess),
+Triangle::Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) :
+    Hittable(ka, kd, ks, shininess, kr, kt),
     a(a),
     b(b),
     c(c)
@@ -41,7 +41,7 @@ void Triangle::setNormal(Vector newNormal) { normal = newNormal; }
 // Interseção de um vetor com o triangulo
 HitRecord Triangle::hit(const Ray& r) const {
     // Plano da face do triângulo
-    Plane p = Plane(getA(), getNormal(), getka(), getkd(), getks(), getshininess());
+    Plane p = Plane(getA(), getNormal(), getka(), getkd(), getks(), getshininess(), getkr(), getkt());
     HitRecord rec;
     
     // rec guarda as informações se r intersecta o plano p
