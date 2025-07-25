@@ -44,16 +44,21 @@ Vector simpleColour(const vector<Hittable*>& l,  const Ray& r) {
     return closest.kd;
 }
 
-Vector phongColour(const vector<Hittable*>& objList, const vector<Light::PontualLight*>& pontualLights, const Light::EnvLight& ambientLight, const Point& cameraLocation, const Ray& r) {
-
+Vector phongColour(const vector<Hittable*>& objList, const vector<Light::PontualLight*>& pontualLights, const Light::EnvLight& ambientLight, const Point& cameraLocation, const Ray& r, int recursionDepth) {
+    if (recursionDepth == 2) {
+        return Vector(0,0,0); 
+    }
     // t_min é crucial para raios de sombra e evitar z-fighting.
     const double t_min = 0.001; 
 
     HitRecord closest = HitRecord{
-        std::numeric_limits<double>::max(),
-        {0,0,0}, {0,0,0}, {0,0,0},
-        {red(238), green(238), blue(228)}, // Cor de fundo padrão
-        {0,0,0}, 0.0
+        std::numeric_limits<double>::max(), // distância t = max(); t: a distância ao longo do ray onde ocorreu a colisão
+        {0,0,0}, // ponto de colisão
+        {0,0,0}, // Vetor normal no9 ponto de colisão
+        {0,0,0}, // ka: componente ambiente
+        {red(238), green(238), blue(228)}, // Cor de fundo padrão; kd: difusa
+        {0,0,0}, //ks especular
+        0.0 // n rugosidade 
     };
     HitRecord current_rec;
     HitRecord shadowRec;
@@ -90,7 +95,7 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
         // 3. Gerenciamento de Sombras
         // Adiciona um pequeno offset à origem do raio de sombra para evitar auto-sombreamento
         // É CRUCIAL que o raio de sombra não comece exatamente no ponto de interseção para evitar "acne" de sombra.
-        Ray shadowRay(closest.hit_point + N * t_min, L); // Usando t_min para offset da origem
+        Ray shadowRay(closest.hit_point + N * t_min, L); // origin=closest.hit_point + N * t_min; direction=L; Usando t_min para offset da origem
 
         bool inShadow = false;
         double lightDistance = (lightLocation - closest.hit_point).magnitude(); 
@@ -109,7 +114,7 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
 
         if (!inShadow) {
             // Componente Difusa: I_Li * k_d * (N . L_i)
-            double NdotL = std::max(0.0, dot(N, L));
+            double NdotL = std::max(0.0, dot(N, L)); // Qnt menor angulo, result mais prox de 1
             Vector diffuse_contrib = closest.kd * NdotL;
             diffuse_contrib = lightColor * diffuse_contrib;
             finalColor = finalColor + diffuse_contrib;
@@ -121,6 +126,14 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
             Vector specular_contrib = closest.ks * shininess_term;
             specular_contrib = lightColor * specular_contrib;
             finalColor = finalColor + specular_contrib;
+
+            // Reflexão;
+            // Reflexão fórmula monitoria
+            recursionDepth++;
+            
+            Vector reflectionDirection(2*N*(dot(N, V)) - V);
+            Vector reflection_contrib = phongColour(objList, pontualLights, ambientLight, closest.hit_point, Ray(closest.hit_point, reflectionDirection.normalized()), recursionDepth) * closest.kr;
+            finalColor = finalColor + reflection_contrib;
         }
     }
     
@@ -141,7 +154,7 @@ string paintScreen(int i, int j, Camera c, const vector<Hittable*>& objList, con
     Ray r = Ray(c.getLocation(), target - c.getLocation());
     
     // Calcula a cor para o raio, passando a lista de objetos
-    Vector col = phongColour(objList, pontualLights, ambientLight, c.getLocation(), r);
+    Vector col = phongColour(objList, pontualLights, ambientLight, c.getLocation(), r, 0);
 
     // Converte a cor para o formato de 0 a 255 e imprime
     int ir = int(255 * col.getX());
@@ -152,7 +165,7 @@ string paintScreen(int i, int j, Camera c, const vector<Hittable*>& objList, con
 }
 
 int main() {
-    string fileName = "letsSee";
+    string fileName = "ReflectionImage";
     string objFile = "inputs/cubo.obj";
     Camera c = Camera({0, 0, 0}, {0, 0, -1}, {0, 1, 0});
     // X -> Para direita ou para esquerda

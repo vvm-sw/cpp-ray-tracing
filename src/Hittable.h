@@ -13,8 +13,8 @@ struct HitRecord {
     Vector kd; // Coeficiente difuso
     Vector ks; // Coeficiente especular
     double shininess; // Expoente n para definir o brilho
-    // double kr; // Coeficiente de reflexão
-    // double kt; // Coeficiente de transmissão
+    double kr; // Coeficiente de reflexão
+    double kt; // Coeficiente de transmissão
 };
 
 class Hittable {
