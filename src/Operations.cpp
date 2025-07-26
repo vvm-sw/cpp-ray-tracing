@@ -86,11 +86,16 @@ bool operator!=(const Vector& a, const Vector& b) {
 }
 
 // Comparação entre dois HitRecord
-// ! Atualizar com novos membros
 bool operator==(const HitRecord& a, const HitRecord& b) {
     if (a.t != b.t) { return false; }
     if (a.normal != b.normal) { return false; }
     if (a.hit_point != b.hit_point) { return false; }
+    if (a.ka != b.ka) { return false; }
+    if (a.kd != b.kd) { return false; }
+    if (a.kr != b.kr) { return false; }
+    if (a.ks != b.ks) { return false; }
+    if (a.kt != b.kt) { return false; }
+    if (a.shininess != b.shininess) { return false; }
     return true;
 }
 
@@ -179,4 +184,9 @@ double rad(double ang) {
 // Multiplicação componente a componente de um vetor. Vetor * Vetor = Vetor
 Vector operator*(const Vector& v1, const Vector& v2) {
     return Vector(v1.getX() * v2.getX(), v1.getY() * v2.getY(), v1.getZ() * v2.getZ());
+}
+
+// Soma de vetores com operador curto - não sei como se chama isso, hehe
+void operator+=(Vector& a, const Vector& b) {
+    a = a + b;
 }
