@@ -64,6 +64,8 @@ HitRecord Sphere::hit(const Ray& r) const {
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();
+            rec.kr = getkr();
+            rec.kt = getkt();
             rec.shininess = getshininess();
         } else {
             return {};
