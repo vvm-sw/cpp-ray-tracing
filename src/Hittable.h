@@ -1,20 +1,21 @@
 #pragma once
 #include "Point.h"
 #include "Vector.h"
+#include <limits>
 
 class Ray;
+using namespace std;
 
 struct HitRecord {
-    double t; // Ele nos diz a que distância ao longo do raio a colisão ocorreu. O t menor é sempre a colisão mais próxima.
-    Point hit_point; // O ponto exato da colisão no espaço 3D.
-    Vector normal; // Este vetor é perpendicular à superfície e é essencial para calcular sombreamento e reflexos.
-
-    Vector ka; // Coeficiente ambiente
-    Vector kd; // Coeficiente difuso
-    Vector ks; // Coeficiente especular
-    double shininess; // Expoente n para definir o brilho
-    double kr; // Coeficiente de reflexão
-    double kt; // Coeficiente de transmissão
+    double t = numeric_limits<double>::max(); // Ele nos diz a que distância ao longo do raio a colisão ocorreu. O t menor é sempre a colisão mais próxima.
+    Point hit_point{}; // O ponto exato da colisão no espaço 3D.
+    Vector normal{}; // Este vetor é perpendicular à superfície e é essencial para calcular sombreamento e reflexos.
+    Vector ka{}; // Coeficiente ambiente
+    Vector kd{}; // Coeficiente difuso
+    Vector ks{}; // Coeficiente especular
+    double shininess = 0; // Expoente n para definir o brilho
+    double kr = 0; // Coeficiente de reflexão
+    double kt = 0; // Coeficiente de transmissão
 };
 
 class Hittable {
