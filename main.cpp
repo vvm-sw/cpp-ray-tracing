@@ -6,6 +6,7 @@
 #include "src/Plane.h"
 #include "src/Triangle.h"
 #include "src/Rectangle.h"
+#include "src/Cube.h"
 #include "src/Camera.h"
 #include "src/Light.h"
 #include "src/Colormap.cpp"
@@ -27,9 +28,8 @@ Vector simpleColour(const vector<Hittable*>& l,  const Ray& r) {
         numeric_limits<double>::max(),
         {0,0,0}, {0,0,0}, {0,0,0},
         {red(238), green(238), blue(228)}, // Cor de fundo padrão
-        {0,0,0}, 0.0
+        {0,0,0}, 0.0, 0.0, 0.0
     };
-    double distance;
     HitRecord rec;
 
     // Itera na lista para verificar os objetos
@@ -139,7 +139,7 @@ bool inShadow(Point hitPoint, Vector rawL, Vector N, const vector<Hittable*>& ob
     Ray shadowRay(hitPoint + N * t_min, rawL);
 
     bool inShadow = false;
-    double lightDistance = rawL.magnitude(); 
+    double lightDistance = rawL.magnitude();
 
     for (const auto& shadowObj : objList) {
         shadowRec = shadowObj->hit(shadowRay);
@@ -162,7 +162,7 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
     }
 
     // t_min é crucial para raios de sombra e evitar z-fighting.
-    const double t_min = 0.001; 
+    const double t_min = 0.00001; 
 
     HitRecord closest = HitRecord{
         numeric_limits<double>::max(), // distância t = max(); t: a distância ao longo do ray onde ocorreu a colisão
@@ -171,7 +171,9 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
         {0,0,0}, // ka: componente ambiente
         {red(238), green(238), blue(228)}, // Cor de fundo padrão; kd: difusa
         {0,0,0}, //ks especular
-        0.0 // n rugosidade 
+        0.0, // n rugosidade 
+        0.0, // ks
+        0.0 // kt
     };
     HitRecord current_rec;
 
@@ -179,7 +181,7 @@ Vector phongColour(const vector<Hittable*>& objList, const vector<Light::Pontual
     for (const auto& obj : objList) {
         current_rec = obj->hit(r); 
         
-        if (current_rec.t > 0 && current_rec.t < closest.t) {
+        if (current_rec.t < closest.t && current_rec.t > 0) {
             closest = current_rec;
         }
     }
@@ -276,101 +278,108 @@ void exibir_barra_de_loading(int progresso, int total) {
 }
 
 int main() {
-    string fileName = "ReflectionImage";
-    string objFile = "inputs/Tree1.obj";
-    Camera c = Camera({0, 1, 25}, {0, 0, -1}, {0, 1, 0});
+    string fileName = "currentDraw";
+    // Camera c = Camera({-0.5, 1.5, 1}, {0, 0, -1}, {0, 1, 0});
+    Camera c = Camera({0, 0, 1}, {0, 0, -1}, {0, 1, 0});
     // X -> Para direita ou para esquerda
     // y -> Para cima ou para baixo
     // Z -> Para dentro ou para fora da tela
-
-
-
     ofstream exitRGB("img/" + fileName + ".ppm");
     vector<Hittable*> objList;
     vector<Light::PontualLight*> pontualLights;
-
-    ObjReader objReader(objFile);
-    vector<Face> objectFaces = objReader.getFaces();
-    vector<vector<Point>> facePointsList = objReader.getFacePoints();
+    
+    // string objFile = "inputs/Tree1.obj";
+    // ObjReader objReader(objFile);
+    // vector<Face> objectFaces = objReader.getFaces();
+    // vector<vector<Point>> facePointsList = objReader.getFacePoints();
 
     // ----------------------------------------------------
     // Inicio da lista de luzes
 
-    Light::EnvLight ambientLight = Light::EnvLight(Vector(1, 1, 1));
-    // Light::PontualLight l1 = Light::PontualLight({0, 0.5, -2}, {1,1,1}); // Luz branca forte acima
-    // Light::PontualLight l2 = Light::PontualLight({-1.5, -0.5, -1.7}, {0.7, 0.7, 0.7}); // Outra luz, mais fraca
-    // Light::PontualLight l3 = Light::PontualLight({2, 0.5, -2.3}, {1,1,1});
-    Light::PontualLight l4 = Light::PontualLight({0, 3, 5}, {1,1,1});
-    // Light::PontualLight l4 = Light::PontualLight({0, 0, -2}, {1,1,1});
-    // pontualLights.push_back(&l1);
+    Light::EnvLight ambientLight = Light::EnvLight(Vector(0.3, 0.3, 0.3));
+    Light::PontualLight l1 = Light::PontualLight({0, 1, 1}, {0.6,0.6,0.6});
+    // Light::PontualLight l2 = Light::PontualLight({0.75, 1, -1.25}, {0.6,0.6,0.6});
+    pontualLights.push_back(&l1);
     // pontualLights.push_back(&l2);
-    // pontualLights.push_back(&l3);
-    pontualLights.push_back(&l4);
 
     // Fim da lista de luzes
     // ----------------------------------------------------
 
     // ----------------------------------------------------
     // Inicio da lista de objetos
-    // Triângulo (AZUL) - um pouco brilhante
-    // Triangle t = Triangle({-0.6, -0.4, -3}, {0.4, -0.4, -3}, {0.4, 0.4, -3}, BLUE, BLUE, {0, 0, 0}, 16);
+    // Primeira cor: cor quando na sombra
+    // Segunda cor: cor quando iluminado
+    // Terceira cor: cor do brilho
+    // kr: O quanto vai refletir os objetos em volta
+    // kt: O quanto é transparente
 
-    // Esfera (VERMELHA)
-    // Sphere s = Sphere({0,0,-3}, 0.3, RED/1.5, RED, WHITE, 16, 0, 0);
-    // Sphere s1 = Sphere({-2,0.5,-3}, 0.5, PURPLE, LIGHT_GRAY, BLACK, 8, 0, 0);
-    // Sphere s2 = Sphere({2,0.5,-3}, 0.5, BLACK, DARK_GRAY, WHITE, 100, 0.1, 0);
-    // Sphere s3 = Sphere({0,1,-2}, 0.2, BLACK, DARK_GRAY, WHITE, 100, 0.1, 0);
-    // Sphere s4 = Sphere({-0.25,0,-1}, 0.3, YELLOW, CYAN/6, CYAN/6, 0, 0.3, 0.5);
-    // Sphere sl1 = Sphere(l1.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
-    // Sphere sl2 = Sphere(l2.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
+    // Cubo
+    // Cube c1 = Cube({-5,-3,3}, {5,-3,3}, BLACK, RED, WHITE, 10, 0, 0, false);
+    // Cube c1 = Cube({0.5,0,-1}, {1,0,-1}, BLUE, RED, WHITE, 10, 0.3, 0, false);
+    // Cube c2 = Cube({-2,-0.5,-1}, {-0.5,-0.5,-1}, BLUE, BLUE, WHITE, 10, 0.3, 0, true);
+
+    // Plano
+    Plane p1 = Plane({0,0,-30},{0,0,1},CYAN,RED,BLUE,0,0,0);
+
+    // Triangulo
+    // Triangle t1 = Triangle({2,0,0},{0,2,0},{0,0,0},CYAN,RED,BLUE,0,0,0);
+
+    // Esferas
+    Sphere s1 = Sphere({2,0.7,-4}, 1, PURPLE, LIGHT_GRAY, BLACK, 8, 0, 0);
+    Sphere s2 = Sphere({1,1,-2}, 1, BROWN/6, ORANGE/3, WHITE, 500, 0, 0.1);
+    Sphere s3 = Sphere({-3,-1,-4.7}, 0.5, BLUE, DARK_GRAY, WHITE, 50, 0, 0);
+    Sphere s4 = Sphere({-2,1,-2}, 1, YELLOW/6, CYAN/3, GRAY, 30, 0.25, 0);
+    Sphere s5 = Sphere({1.3,-0.3,0}, 0.15, YELLOW, CYAN/3, GRAY, 30, 0.25, 0);
+
+    // Sphere sl1 = Sphere(l1.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500, 0, 0);
+    // Sphere sl2 = Sphere(l2.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500, 0, 0);
     // Sphere sl3 = Sphere(l3.getLocation()+Vector{0,0.05,0}, 0.02, YELLOW, YELLOW, YELLOW, 500);
-    // Plane p1 = Plane({0,0,-10},{0,0,-1},BLACK,YELLOW,PURPLE,10,0.3,0.5);
+    
     // Retângulo Eixo X (VERMELHO)
     // Rectangle axisX = Rectangle({-1.7,-1,-2}, 0.03, 0.6, RED/8, RED, GRAY*1.3, 32, 0, 0);
-
     // Retângulo Eixo Y (VERDE)
     // Rectangle axisY = Rectangle({-1.7,-1,-2}, 0.03, 0.6, GREEN/8, GREEN, GRAY*1.3, 32, 0, 0);
-
     // Retângulo Eixo Z (AZUL)
     // Rectangle axisZ = Rectangle({-1.7,-1,-2}, 0.03, 0.6, BLUE/8, BLUE, GRAY*1.3, 32, 0, 0);
 
-    // objList.push_back(&t);
-    // objList.push_back(&s);
-    // objList.push_back(&s1);
-    // objList.push_back(&s2);
-    // objList.push_back(&s3);
-    // objList.push_back(&s4);
-    // objList.push_back(&p1);
+    // objList.push_back(&c1);
+    // objList.push_back(&c2);
+    objList.push_back(&s1);
+    objList.push_back(&s2);
+    objList.push_back(&s3);
+    objList.push_back(&s4);
+    // objList.push_back(&s5);
+    objList.push_back(&p1);
+    // objList.push_back(&t1);
+
     // objList.push_back(&sl1);
     // objList.push_back(&sl2);
     // objList.push_back(&sl3);
+
     // objList.push_back(&axisX);
     // objList.push_back(&axisZ);
     // objList.push_back(&axisY);
-    // t.rotateZ(rad(45));
-    // t.rotateX(rad(45));
-    // t.rotateY(rad(45));
     // axisZ.rotateX(rad(90));
     // axisX.rotateZ(rad(90));
     // axisZ.transfer({-0.178,-0.39,-0.5});
     // axisX.transfer({0.285,-0.29,0});
 
-    for (int k = 0; k < objectFaces.size(); ++k) { 
-        Point p0 = facePointsList[k][0];
-        Point p1 = facePointsList[k][1];
-        Point p2 = facePointsList[k][2];
-        Triangle* temp = new Triangle(p0, p1, p2, objectFaces[k].ka, objectFaces[k].kd, objectFaces[k].ks, objectFaces[k].ns, 0.0, 1.0 - objectFaces[k].d);
-        objList.push_back(temp);
-    }
+    // for (int k = 0; k < objectFaces.size(); ++k) { 
+    //     Point p0 = facePointsList[k][0];
+    //     Point p1 = facePointsList[k][1];
+    //     Point p2 = facePointsList[k][2];
+    //     Triangle* temp = new Triangle(p0, p1, p2, objectFaces[k].ka, objectFaces[k].kd, objectFaces[k].ks, objectFaces[k].ns, 0.0, 1.0 - objectFaces[k].d);
+    //     objList.push_back(temp);
+    // }
     
     // Fim da lista de objetos
     // ----------------------------------------------------
     
-    int prog = 0;
+    int prog = 1;
     exitRGB << "P3\n" << c.getHRes() << " " << c.getVRes() << "\n255\n";
     for (int j = c.getVRes() - 1; j >= 0; j--) { // de cima para baixo
         for (int i = 0; i < c.getHRes(); i++) { // da esquerda para direita
-            exibir_barra_de_loading(prog++, c.getVRes() * c.getHRes());
+            // exibir_barra_de_loading(prog++, c.getVRes() * c.getHRes());
             exitRGB << paintScreen(i, j, c, objList, pontualLights, ambientLight) << "\n";
         }
     }
