@@ -53,7 +53,7 @@ HitRecord Sphere::hit(const Ray& r) const {
     // Um pequeno epsilon (t_min) para evitar artefatos de precisão (z-fighting)
     // Epsilon é importante para evitar que objetos "encostando" na câmera ou um no outro
     // causem problemas de interseção.
-    double t_min = 0.001;
+    double t_min = 0.00001;
     // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
