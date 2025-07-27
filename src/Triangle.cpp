@@ -9,10 +9,7 @@ Triangle::Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, d
     Hittable(ka, kd, ks, shininess, kr, kt),
     a(a),
     b(b),
-    c(c)
-{
-    setNormal(cross(a-b, c-b).normalized());
-}
+    c(c) { setNormal(cross(a-b, c-b).normalized()); }
 
 // Print do triangulo no formato <(x1, y1, z1), (x2, y2, z2), (x3, y3, 3z)>
 void Triangle::print() {
@@ -37,24 +34,27 @@ void Triangle::setA(Point newA) { a = newA; }
 void Triangle::setB(Point newB) { b = newB; }
 void Triangle::setC(Point newC) { c = newC; }
 void Triangle::setNormal(Vector newNormal) { normal = newNormal; }
+void Triangle::recalculateNormal() {
+    setNormal(cross(a-b, c-b).normalized());
+}
 
 // Interseção de um vetor com o triangulo
 HitRecord Triangle::hit(const Ray& r) const {
     // Plano da face do triângulo
     Plane p = Plane(getA(), getNormal(), getka(), getkd(), getks(), getshininess(), getkr(), getkt());
-    HitRecord rec;
+    HitRecord rec{};
     
     // rec guarda as informações se r intersecta o plano p
     rec = p.hit(r);
     // Se r não intersecta o plano então também não intersecta o triângulo
-    if (rec == HitRecord{}) { return {}; }
-
     // Se r intersecta o plano então temos que verificar se intersecta o triângulo
     // Se alfa, beta e gama forem diferentes de 0 então r intersecta o triângulo
+    if (rec.t == numeric_limits<double>::max() || rec.t <= 0) { return HitRecord{}; }
+
     if (has(rec.hit_point)) {
         return rec;
     } else {
-        return {};
+        return HitRecord{};
     }
 }
 
