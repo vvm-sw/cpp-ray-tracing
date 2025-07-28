@@ -5,8 +5,8 @@
 #include <cmath>
 
 // Construtores
-Sphere::Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(ka, kd, ks, shininess),
+Sphere::Sphere(Point center, double radius, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) :
+    Hittable(ka, kd, ks, shininess, kr, kt),
     center(center),
     radius(radius)
     {}
@@ -53,7 +53,7 @@ HitRecord Sphere::hit(const Ray& r) const {
     // Um pequeno epsilon (t_min) para evitar artefatos de precisão (z-fighting)
     // Epsilon é importante para evitar que objetos "encostando" na câmera ou um no outro
     // causem problemas de interseção.
-    double t_min = 0.001;
+    double t_min = 0.00001;
     // Se o discriminante for = 0 então temos apenas uma raíz, ou seja há interseção
     if (discriminant == 0) {
         t1 = (-b) / (2 * a);
@@ -64,6 +64,8 @@ HitRecord Sphere::hit(const Ray& r) const {
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();
+            rec.kr = getkr();
+            rec.kt = getkt();
             rec.shininess = getshininess();
         } else {
             return {};
@@ -82,6 +84,8 @@ HitRecord Sphere::hit(const Ray& r) const {
             rec.ka = getka();
             rec.ks = getks();
             rec.kd = getkd();
+            rec.kr = getkr();
+            rec.kt = getkt();
             rec.shininess = getshininess();
         } else {
             return {};

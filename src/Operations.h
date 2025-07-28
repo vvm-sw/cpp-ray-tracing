@@ -73,3 +73,6 @@ double rad(double ang);
 
 // Multiplicação componente a componente de um vetor
 Vector operator*(const Vector& v1, const Vector& v2);
+
+// Soma de vetores com operador curto - não sei como se chama isso, hehe
+void operator+=(Vector& a, const Vector& b);

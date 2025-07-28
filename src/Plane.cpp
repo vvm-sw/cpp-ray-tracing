@@ -2,12 +2,10 @@
 #include "Operations.h"
 #include "Ray.h"
 
-Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess) :
-    Hittable(ka, kd, ks, shininess),
+Plane::Plane(Point newPlanePoint, Vector newNormal, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt) :
+    Hittable(ka, kd, ks, shininess, kr, kt),
     planePoint(newPlanePoint)
-    {
-        normal = newNormal.normalized();
-    }
+    { normal = newNormal.normalized(); }
 
 // Getters
 const Point& Plane::getPlanePoint() const { return planePoint; }
@@ -36,21 +34,14 @@ HitRecord Plane::hit (const Ray& r) const {
     // Se qpDotN == 0, então qp é paralelo ao plano e intersecta (infinitas vezes) todo o plano pois o raio está no próprio plano
     // Se qpDotN != 0, então o raio intersecta o plano
     double qpDotN = dot(qp, getNormal());
-    HitRecord rec;
+    HitRecord rec{};
     double t;
+    bool rayTouchPlane = false;
+
     if (dDotN == 0) {
         if (qpDotN == 0) {
-            // Raio está no plano
-            rec.t = 0.000001;
-            rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.normal = getNormal();
-            rec.ka = getka();
-            rec.ks = getks();
-            rec.kd = getkd();
-            rec.shininess = getshininess();
-        } else {
-            // Raio não intersecta o plano
-            rec = {};
+            // Raio está contido no plano
+            rayTouchPlane = true;
         }
     } else {
         // Raio intersecta o plano mas temos que verificar o t
@@ -71,17 +62,21 @@ HitRecord Plane::hit (const Ray& r) const {
         // agora como o tipo ponto que a operação dot reconhece
         t = (-dot(r.origin()-Point(0, 0, 0), getNormal()) + dot(getPlanePoint()-Point(0, 0, 0), getNormal())) / dDotN;
 
-        if (t <= 0) {
-            rec = {};
-        } else {
-            rec.t = t;
-            rec.hit_point = r.origin() + (rec.t * r.direction());
-            rec.normal = getNormal();
-            rec.ka = getka();
-            rec.ks = getks();
-            rec.kd = getkd();
-            rec.shininess = getshininess();
+        if (t > 0) {
+            rayTouchPlane = true;
         }
+    }
+    
+    if (rayTouchPlane && dDotN < 0) {
+        rec.t = t;
+        rec.hit_point = r.origin() + (rec.t * r.direction());
+        rec.normal = getNormal();
+        rec.ka = getka();
+        rec.ks = getks();
+        rec.kd = getkd();
+        rec.shininess = getshininess();
+        rec.kr = getkr();
+        rec.kt = getkt();
     }
     
     return rec;

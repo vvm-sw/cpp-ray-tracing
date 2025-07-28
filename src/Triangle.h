@@ -11,7 +11,7 @@ private:
     Vector normal;
 public:
     // Construtores
-    Triangle(Point x, Point y, Point z, Vector ka, Vector kd, Vector ks, double shininess);
+    Triangle(Point a, Point b, Point c, Vector ka, Vector kd, Vector ks, double shininess, double kr, double kt);
 
     // Print do triangulo no formato <(x1, y1, z1), (x2, y2, z2), (x3, y3, 3z)>
     void print() override;
@@ -28,6 +28,7 @@ public:
     void setB(Point newB);
     void setC(Point newC);
     void setNormal(Vector newNormal);
+    void recalculateNormal();
 
     // Interseção de um vetor com o triangulo
     HitRecord hit(const Ray& r) const override;
